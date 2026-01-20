@@ -71,45 +71,7 @@
             </div>
           </section>
 
-          <!-- Delivery Section -->
-          <section class="checkout-section">
-            <h2 class="section-title">Delivery Address</h2>
-            
-            <!-- Location Dropdowns -->
-            <div class="location-dropdowns">
-              <select id="island-select" class="checkout-select">
-                <option value="">Select Island</option>
-              </select>
-              <select id="region-select" class="checkout-select" disabled>
-                <option value="">Select Region</option>
-              </select>
-              <select id="province-select" class="checkout-select" disabled>
-                <option value="">Select Province</option>
-              </select>
-            </div>
-
-            <!-- Name Fields -->
-            <div class="name-fields">
-              <input type="text" id="firstName" placeholder="First Name" class="checkout-input half-width" required>
-              <input type="text" id="lastName" placeholder="Last Name" class="checkout-input half-width" required>
-            </div>
-
-            <!-- Address -->
-            <div class="form-group">
-              <input type="text" id="address" placeholder="Address" class="checkout-input" required>
-            </div>
-
-            <!-- Postal Code and City -->
-            <div class="postal-city-fields">
-              <input type="text" id="postalCode" placeholder="Postal Code" class="checkout-input half-width" pattern="[0-9]*" inputmode="numeric" required>
-              <input type="text" id="city" placeholder="City" class="checkout-input half-width" required>
-            </div>
-
-            <!-- Phone -->
-            <div class="form-group">
-              <input type="tel" id="phone" placeholder="Phone (optional)" class="checkout-input">
-            </div>
-          </section>
+          <!-- Delivery Section Removed -->
 
           <!-- Payment Section -->
           <section class="checkout-section">
@@ -121,10 +83,7 @@
                 <input type="radio" id="credit-card" name="payment" value="credit_card" checked>
                 <label for="credit-card">Credit Card</label>
               </div>
-              <div class="payment-option">
-                <input type="radio" id="cash-on-delivery" name="payment" value="cash_on_delivery">
-                <label for="cash-on-delivery">Cash on Delivery</label>
-              </div>
+              <!-- COD Removed -->
             </div>
             
             <div class="credit-card-fields" id="credit-card-fields">
@@ -138,14 +97,7 @@
               <input type="text" id="cardName" placeholder="Name on card" class="checkout-input">
             </div>
 
-            <div class="cash-on-delivery-info" id="cash-on-delivery-info" style="display: none;">
-              <p class="cod-note">
-                You will pay ₱<span id="cod-total-amount">0.00</span> upon delivery. Please prepare the exact amount.
-              </p>
-              <p class="cod-warning">
-                <span class="warning-icon">⚠️</span> Note: Maximum order value for COD is ₱5,000.
-              </p>
-            </div>
+            <!-- COD Info Removed -->
 
             <button type="button" id="payNowBtn" class="pay-now-btn">Pay Now</button>
         </section>
@@ -170,10 +122,7 @@
               <span>Subtotal</span>
               <span id="subtotal">₱ 0.00</span>
             </div>
-            <div class="total-line">
-              <span>Shipping</span>
-              <span>Enter shipping address</span>
-            </div>
+            <!-- Shipping Removed -->
             <div class="total-line final-total">
               <span>Total:</span>
               <span id="total">PHP ₱ 0.00</span>
@@ -189,13 +138,7 @@
   <div class="footer-container">
 
     <!-- Mailing List -->
-    <div class="footer-subscribe">
-      <p>Unlock up to 10% off today by joining our mailing list to get discounts and exclusive news! ✨</p>
-      <form>
-        <input type="email" placeholder="Enter your email address" required>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
+    <!-- Mailing List Removed -->
 
     <!-- Footer Navigation -->
     <div class="footer-nav">
@@ -216,8 +159,7 @@
   </div>
 </footer>
 
-  <script src="../js/newsletter.js" defer></script>
-  <script src="../js/location-dropdown.js"></script>
+  <!-- location-dropdown.js Removed -->
   <script src="../js/checkout.js"></script>
 
 <!-- Bootstrap 5.3.8 JS -->

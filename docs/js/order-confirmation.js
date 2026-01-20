@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     injectConfirmationStyles();
 
     // Load and display all data sections
-    loadDeliveryInfo(); // Needs to run first to personalize the thank you message
+    personalizeMessage();
     loadOrderData();
     loadPaymentInfo();
     
@@ -26,15 +26,14 @@ function loadOrderData() {
     // Retrieve HTML elements (CRITICAL STEP)
     const orderItemsContainer = document.getElementById('orderItems');
     const subtotalElement = document.getElementById('subtotal');
-    const shippingElement = document.getElementById('shipping');
     const totalElement = document.getElementById('total');
     
     // Safety check for the parent container before trying to use .closest()
     const totalContainer = totalElement?.closest('.order-totals'); 
 
     // --- Safety Check for Totals ---
-    if (!subtotalElement || !shippingElement || !totalElement) {
-        console.error("Order Summary Error: Missing HTML element ID (subtotal, shipping, or total). Check your order-confirmation.html file.");
+    if (!subtotalElement || !totalElement) {
+        console.error("Order Summary Error: Missing HTML element ID (subtotal or total). Check your order-confirmation.html file.");
         if (orderItemsContainer) {
             orderItemsContainer.innerHTML = '<p>Order Summary failed to load. Please check console for errors.</p>';
         }
@@ -84,14 +83,13 @@ function loadOrderData() {
     orderItemsContainer.innerHTML = itemsHTML;
     
     // Calculate and Display Totals
-    const shipping = 50.00;
+    const shipping = 0.00;
     let finalTotal = subtotal + shipping;
     
     // Totals computed; display below
     
     // These lines should now work because we checked if the elements exist
     subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
-    shippingElement.textContent = `₱${shipping.toFixed(2)}`;
     
     // Handle Discount
     if (discountAmount > 0 && totalContainer) { // Check if totalContainer is available for insertion
@@ -121,61 +119,14 @@ function loadOrderData() {
     // Final total rendered
 }
 
-function loadDeliveryInfo() {
+function personalizeMessage() {
     const deliveryData = JSON.parse(localStorage.getItem('deliveryData')) || null;
-    const deliveryContainer = document.getElementById('deliveryDetails');
-    
-    if (!deliveryData) {
-        deliveryContainer.innerHTML = `<p>Delivery information not available.</p>`;
-        return;
-    }
-    
-    // Dynamic Order ID (since your checkout didn't save one explicitly)
-    const orderId = 'BUB-' + new Date().getTime().toString().slice(-6); 
-
-    const deliveryHTML = `
-        <div class="delivery-info">
-            <div class="info-row">
-                <span class="info-label">Order ID:</span>
-                <span>${orderId}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Name:</span>
-                <span>${deliveryData.firstName} ${deliveryData.lastName}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Email:</span>
-                <span>${deliveryData.email}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Address:</span>
-                <span>${deliveryData.address}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">City:</span>
-                <span>${deliveryData.city}, ${deliveryData.postalCode}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Location:</span>
-                <span>${deliveryData.province}, ${deliveryData.region}, ${deliveryData.island}</span>
-            </div>
-            ${deliveryData.phone ? `
-            <div class="info-row">
-                <span class="info-label">Phone:</span>
-                <span>${deliveryData.phone}</span>
-            </div>
-            ` : ''}
-        </div>
-    `;
-    
-    deliveryContainer.innerHTML = deliveryHTML;
     
     // Personalize Confirmation Message
     const confirmationTitle = document.querySelector('.confirmation-title');
     const confirmationMessage = document.getElementById('confirmationMessage');
     
-    if (confirmationTitle && deliveryData.firstName) {
-        confirmationTitle.textContent = `Thank you for your purchase, ${deliveryData.firstName}!`;
+    if (deliveryData && deliveryData.email) {
         confirmationMessage.innerHTML = `
             Your order has been placed successfully. A confirmation email<br>
             has been sent to <strong>${deliveryData.email}</strong>

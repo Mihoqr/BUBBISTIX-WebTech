@@ -123,9 +123,9 @@ function validateForm() {
         return false;
     }
     
-    // 1. Validate mandatory delivery/contact fields
+    // 1. Validate mandatory contact fields
     const requiredFields = [
-        'email', 'firstName', 'lastName', 'address', 'postalCode', 'city'
+        'email'
     ];
     
     let isValid = true;
@@ -179,34 +179,7 @@ function initializeDiscountCode() {
     });
 }
 
-function initializePostalCodeValidation() {
-    const postalCodeInput = document.getElementById('postalCode');
-    
-    if (postalCodeInput) {
-        // Only allow numeric input
-        postalCodeInput.addEventListener('input', function(e) {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-        
-        // Prevent non-numeric characters on keypress
-        postalCodeInput.addEventListener('keypress', function(e) {
-            // Allow: backspace, delete, tab, escape, enter
-            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                (e.keyCode === 65 && e.ctrlKey === true) ||
-                (e.keyCode === 67 && e.ctrlKey === true) ||
-                (e.keyCode === 86 && e.ctrlKey === true) ||
-                (e.keyCode === 88 && e.ctrlKey === true)) {
-                return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
-    }
-}
+
 
 function initializeCreditCardValidation() {
     const cardNumberInput = document.getElementById('cardNumber');
@@ -386,7 +359,7 @@ function loadCartItems() {
         orderItemsContainer.appendChild(orderItem);
     });
     
-    const shipping = 50.00; 
+    const shipping = 0.00; 
     let initialTotal = subtotal + shipping;
     
     subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
@@ -403,7 +376,7 @@ function applyDiscountCode(code) {
     };
     
     const baseSubtotal = parseFloat(localStorage.getItem('baseSubtotal')) || 0;
-    const shipping = 50.00;
+    const shipping = 0.00;
     
     const totalElement = document.getElementById('total');
     const discountInput = document.getElementById('discountCode');

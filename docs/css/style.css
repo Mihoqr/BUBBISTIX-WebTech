@@ -121,8 +121,8 @@ header {
 }
 
 .nav-link:hover, .nav-link.active { color: var(--leafy-green) !important; }
-.nav-icon { width: 25px; height: 25px; vertical-align: middle; font-weight: bold; stroke-width: 5px; transition: all 0.3s ease; }
-.nav-icon:hover { transform: scale(1.05); }
+.nav-icon { width: 30px !important; height: 30px !important; vertical-align: middle; font-weight: bold; stroke-width: 5px; transition: all 0.3s ease; filter: drop-shadow(0 0 1px rgba(0,0,0,0.5)); }
+.nav-icon:hover { transform: scale(1.15); filter: drop-shadow(0 0 2px rgba(0,0,0,0.8)); }
 .nav-link.active .nav-icon, .nav-icon:active { filter: brightness(0) saturate(100%) invert(27%) sepia(18%) saturate(1234%) hue-rotate(120deg) brightness(95%) contrast(89%); }
 
 /* HAMBURGER & MOBILE NAV BAR STYLES */
@@ -2443,8 +2443,8 @@ footer {
     }
     
     .nav-icon {
-        width: 24px;
-        height: 24px;
+        width: 30px !important;
+        height: 30px !important;
         transition: transform 0.3s ease;
     }
     
@@ -2999,4 +2999,61 @@ footer {
 .modal-backdrop.show {
   backdrop-filter: blur(3px);
   background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================
+   Footer Layout Updates
+   ========================================= */
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 0.5rem 0;
+    min-height: 80px;
+}
+
+.footer-nav {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+/* Lower navigation bar in the middle */
+.footer-nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav li {
+    margin: 0;
+}
+
+/* Copyright on the lower right */
+.footer-copy {
+    position: absolute;
+    bottom: 0;
+    right: 2rem;
+    margin: 0;
+    width: auto;
+}
+
+.footer-copy p {
+    margin-bottom: 0;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 768px) {
+    .footer-copy {
+        position: static;
+        margin-top: 1rem;
+        text-align: center;
+    }
 }
