@@ -297,10 +297,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     function setupActionButtons() {
         const addToCartBtn = document.querySelector('.btn-add-cart');
         const checkoutBtn = document.querySelector('.btn-checkout');
-        const quantityInput = document.querySelector('.quantity-input');
-        const quantityBtns = document.querySelectorAll('.quantity-btn');
-        const minusBtn = quantityBtns[0];
-        const plusBtn = quantityBtns[1];
 
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', function() {
@@ -309,9 +305,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const product = window.currentProductData;
                 const folder = getFolderForSet(product.set);
                 const imagePath = `../images/stickers/${folder}/${product.image}`;
-                const quantity = parseInt(quantityInput ? quantityInput.value : 1) || 1;
                 
-                addToCart(product.name, imagePath, product.price, quantity);
+                addToCart(product.name, imagePath, product.price);
             });
         }
 
@@ -320,31 +315,26 @@ document.addEventListener('DOMContentLoaded', async function() {
                 window.location.href = 'checkout.html';
             });
         }
-
-        // Quantity Logic
-        if (plusBtn && quantityInput) {
-            plusBtn.addEventListener('click', () => {
-                let val = parseInt(quantityInput.value) || 1;
-                quantityInput.value = val + 1;
-            });
-        }
-
-        if (minusBtn && quantityInput) {
-            minusBtn.addEventListener('click', () => {
-                let val = parseInt(quantityInput.value) || 1;
-                if (val > 1) quantityInput.value = val - 1;
-            });
-        }
     }
 
-    function addToCart(name, image, price, quantity) {
+    function addToCart(name, image, price) {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let existingItem = cart.find(item => item.name === name);
         
         if (existingItem) {
-            existingItem.quantity += quantity;
+             // Already in cart
+             if (window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function') {
+                window.bubbistixUI.showToast({
+                    title: 'Already in Cart',
+                    message: `${name} is already in your cart!`,
+                    type: 'info'
+                });
+            } else {
+                alert(`${name} is already in your cart!`);
+            }
+            return;
         } else {
-            cart.push({ name, image, price, quantity: quantity });
+            cart.push({ name, image, price, quantity: 1 });
         }
 
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -353,7 +343,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function') {
             window.bubbistixUI.showToast({
                 title: 'Added to Cart',
-                message: `${quantity} x ${name} has been added to your cart!`,
+                message: `${name} has been added to your cart!`,
                 type: 'success'
             });
         } else {

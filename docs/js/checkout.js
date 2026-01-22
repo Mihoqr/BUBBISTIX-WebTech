@@ -340,8 +340,8 @@ function loadCartItems() {
     
     cart.forEach(item => {
         const itemPrice = parseFloat(item.price);
-        const itemQuantity = parseInt(item.quantity);
-        const itemTotal = itemPrice * itemQuantity;
+        // Force quantity to 1 for digital items
+        const itemTotal = itemPrice;
 
         subtotal += itemTotal;
         
@@ -351,7 +351,7 @@ function loadCartItems() {
             <img src="${item.image}" alt="${item.name}" class="item-image">
             <div class="item-details">
                 <div class="item-name">${item.name}</div>
-                <div class="item-price">₱${itemPrice.toFixed(2)} × ${itemQuantity}</div>
+                <div class="item-price">₱${itemPrice.toFixed(2)}</div>
             </div>
             <div class="item-total">₱${itemTotal.toFixed(2)}</div>
         `;

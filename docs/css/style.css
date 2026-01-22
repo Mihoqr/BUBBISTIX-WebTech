@@ -967,7 +967,11 @@ button:hover {
 }
 
 .item-total {
-    text-align: right;
+    text-align: center;
+}
+
+.header-total {
+    text-align: center;
 }
 
 .total-price {
@@ -1106,13 +1110,6 @@ button:hover {
 .bubbistix-toast-header .toast-title {
     font-family: 'Cute-Sunrise', cursive;
     color: #E6536D;
-}
-
-.tax-note {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-    font-family: 'Poppins', sans-serif;
 }
 
 .checkout-btn {

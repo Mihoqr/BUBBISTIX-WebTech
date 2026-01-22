@@ -180,12 +180,21 @@ function setupEventListeners() {
     });
 }
 
-// Add to cart logic (Remains unchanged)
+// Add to cart logic
 function addToCart(name, image, price) {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
   let existingItem = cart.find(item => item.name === name);
   if (existingItem) {
-    existingItem.quantity += 1;
+     if (window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function') {
+        window.bubbistixUI.showToast({
+            title: 'Already in Cart',
+            message: `${name} is already in your cart!`,
+            type: 'info'
+        });
+    } else {
+        alert(`${name} is already in your cart!`);
+    }
+    return;
   } else {
     cart.push({ name, image, price, quantity: 1 });
   }

@@ -62,8 +62,8 @@ function loadOrderData() {
     items.forEach((item, index) => {
         // Ensure price is treated as a number
         const itemPrice = parseFloat(item.price);
-        const itemQuantity = parseInt(item.quantity);
-        const itemTotal = itemPrice * itemQuantity;
+        // Force quantity to 1
+        const itemTotal = itemPrice;
         subtotal += itemTotal;
         
         // Build item row output
@@ -72,8 +72,6 @@ function loadOrderData() {
             <div class="order-item">
                 <div class="item-details">
                     <h4 class="item-name">${item.name}</h4>
-                    <p class="item-quantity">Quantity: ${itemQuantity}</p>
-                    <p class="item-price-per">₱${itemPrice.toFixed(2)} each</p>
                 </div>
                 <div class="item-total">₱${itemTotal.toFixed(2)}</div>
             </div>
@@ -128,8 +126,8 @@ function personalizeMessage() {
     
     if (deliveryData && deliveryData.email) {
         confirmationMessage.innerHTML = `
-            Your order has been placed successfully. A confirmation email<br>
-            has been sent to <strong>${deliveryData.email}</strong>
+            Your order has been placed successfully. The digital sticker files<br>
+            have been sent to your email address <strong>${deliveryData.email}</strong>
         `;
     }
 }
