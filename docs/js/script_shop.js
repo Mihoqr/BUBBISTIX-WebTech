@@ -125,9 +125,11 @@ function renderGallery(filterText = "", sortBy = "") {
               const imagePath = `../images/stickers/${folder}/${product.image}`;
               return `
                 <div class="item">
-                  <img src="${imagePath}" alt="${product.name}">
-                  <p class="gallery-item-name">${product.name}</p>
-                  <p class="gallery-item-price">₱${product.price.toFixed(2)}</p>
+                  <a href="shop-preview.html?product=${encodeURIComponent(product.name)}" style="text-decoration: none; color: inherit;">
+                      <img src="${imagePath}" alt="${product.name}">
+                      <p class="gallery-item-name">${product.name}</p>
+                      <p class="gallery-item-price">₱${product.price.toFixed(2)}</p>
+                  </a>
                   <button class="product-btn" 
                   onclick="addToCart('${product.name}', '${imagePath}', ${product.price})">Add to Cart</button>
                 </div>

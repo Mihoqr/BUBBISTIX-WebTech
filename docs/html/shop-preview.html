@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubbistix | Berry Boba Babies</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../images/fav_smile.png">
+  <link rel="stylesheet" href="../css/product.css">
+</head>
+<body class="sticker-product-page">
+
+<!-- HEADER AND NAVIGATION BAR -->
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            
+            <input id="nav-toggle" type="checkbox" aria-label="Toggle navigation menu"> 
+            
+            <div class="logo-and-toggler-wrapper d-flex justify-content-between align-items-center w-100 p-2 p-lg-0">
+                
+                <a class="navbar-brand" href="../../index.html">
+                    <img src="../images/logo/image.png" alt="BUBBiSTiX logo" class="logo">
+                </a>
+                
+                <div class="pure-css-hamburger d-lg-none">
+                    <label for="nav-toggle" class="hamburger" role="button">
+                        <div class="top-bun"></div>
+                        <div class="meat"></div>
+                        <div class="bottom-bun"></div>
+                    </label>
+                </div>
+            </div> 
+            
+            <div class="collapse navbar-collapse justify-content-lg-center" id="navbarNav">
+                <ul class="navbar-nav nav-links mb-2 mb-lg-0">
+                    <li class="nav-item"><a href="../../index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link active">Stickers</a></li>
+                    <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    
+                    <li class="nav-item">
+                        <a href="registration.html" class="nav-link" aria-label="Account login or registration">
+                            <img src="../images/misc/Account-Icon.png" alt="Account icon" class="nav-icon">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="add-to-cart.html" class="nav-link" aria-label="Shopping cart">
+                            <img src="../images/misc/Add-to-cart-Icon.png" alt="Shopping cart icon" class="nav-icon">
+                        </a>
+                    </li>
+                </ul> 
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="product-card">
+        <div class="row">
+            <!-- Left Column: Images -->
+            <div class="col-md-6">
+                <!-- Main Image Carousel -->
+                <div id="productCarousel" class="carousel carousel-dark slide mb-3" data-bs-ride="false" data-bs-interval="false">
+                    <div class="carousel-inner" id="carousel-inner-container">
+                        <div class="carousel-item active">
+                            <img src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_COVER.png" alt="Berry Boba Babies" class="d-block w-100 product-image-main sticker-preview-trigger" data-src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_COVER.png">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                
+                <div class="thumbnail-container">
+                    <img src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page2.png" alt="Berry Boba Babies Page 2" class="thumbnail sticker-preview-trigger" data-src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page2.png">
+                    <img src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page3.png" alt="Berry Boba Babies Page 3" class="thumbnail sticker-preview-trigger" data-src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page3.png">
+                    <img src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page4.png" alt="Berry Boba Babies Page 4" class="thumbnail sticker-preview-trigger" data-src="../images/stickers/set_boba/Berry_Boba_Babies_Set/Berry Boba Babies_Page4.png">
+                </div>
+            </div>
+
+            <!-- Right Column: Details -->
+            <div class="col-md-6">
+                <h1 class="product-title">Berry Boba Babies</h1>
+                <p class="product-price">249.00 PHP</p>
+                
+                <div class="mb-2">Quantity</div>
+                <div class="quantity-selector">
+                    <button class="quantity-btn">-</button>
+                    <input type="text" value="1" class="quantity-input" readonly>
+                    <button class="quantity-btn">+</button>
+                </div>
+                
+                <button class="btn-add-cart">Add to Cart</button>
+                <button class="btn-checkout">Check Out</button>
+                
+                <div class="product-description">
+                    <p id="product-description-text"><strong>Description:</strong><br>
+                    A mixed set of adorable pastel animals holding berries, perfect for decorating planners, journals, to-do lists, and aesthetic digital pages. Each character adds sweetness and charm to your layouts.</p>
+                    
+                    <div class="meta-info">
+                        <p class="mb-1">Designed by: Bubbistix</p>
+                        <p class="mb-1">-Digital Download</p>
+                        <p class="mb-1">-Digital File Type</p>
+                        <p class="mt-3 text-uppercase fw-bold" style="color: #49705B;">NOTE: DIGITAL FILE ONLY! NO PHYSICAL ITEM WILL BE RECEIVED.</p>
+                        <p class="mt-2 text-muted">Kawaii Animal Stickers | Pastel Characters | Digital Notes | PNG</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Related Stickers Section -->
+        <div id="related-stickers-container" class="row mt-5">
+            <!-- Dynamic content will be loaded here -->
+        </div>
+    </div>
+</main>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="stickerPreviewModal" tabindex="-1" aria-labelledby="stickerPreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center p-4 position-relative" style="min-height: 300px;">
+        <button id="prevBtn" class="nav-arrow left-arrow">&#10094;</button>
+        <img id="previewImage" src="" alt="Sticker Preview" style="max-width: 100%; max-height: 70vh; border-radius: 10px; object-fit: contain;">
+        <button id="nextBtn" class="nav-arrow right-arrow">&#10095;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-nav">
+      <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="shop.html">Stickers</a></li>
+        <li><a href="faqs.html">FAQs</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-copy">
+      <p>Copyright © Bubbistix 2025</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="../js/ui_bootstrap.js"></script>
+<!-- Preview Logic -->
+<script src="../js/shop-preview.js"></script>
+
+</body>
+</html>

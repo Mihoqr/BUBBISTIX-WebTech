@@ -1,31 +1,348 @@
 [
-  { "name": "Berry Boba Babies Set", "set": "Berry Boba Babies", "image": "cover_boba.png", "price": 249 },
-  { "name": "Sakura Mochi Solo", "set": "Sakura Mochi", "image": "cover_mochi1.png", "price": 99 },
-  { "name": "Sakura Mochi Set", "set": "Sakura Mochi", "image": "cover_mochi2.png", "price": 249 },
-  { "name": "Moonlight Magic Set", "set": "Moonlight Magic", "image": "cover_magic.png", "price": 249 },
-  { "name": "Bear-ry Sweet Companions", "set": "Berry Boba Babies", "image": "bearry-sweet-companions.png", "price": 200 },
-  { "name": "Bento Blossom Delights", "set": "Sakura Mochi", "image": "bento-blossom-delights.png", "price": 200 },
-  { "name": "Berry Baby Blossoms", "set": "Berry Boba Babies", "image": "berry-baby-blossoms.png", "price": 200 },
-  { "name": "Berry Buddies Collection", "set": "Berry Boba Babies", "image": "berry-buddies-collection.png", "price": 200 },
-  { "name": "Berry Butterfly Friends", "set": "Berry Boba Babies", "image": "berry-butterfly-friends.png", "price": 200 },
-  { "name": "Bunny Berry Friends", "set": "Berry Boba Babies", "image": "bunny-berry-friends.png", "price": 200 },
-  { "name": "Cherry Blossom Treats", "set": "Sakura Mochi", "image": "cherry-blossom-treats.png", "price": 200 },
-  { "name": "Cosmic Cozy Babies", "set": "Moonlight Magic", "image": "cosmic-cozy-babies.png", "price": 200 },
-  { "name": "Cozy Café Bear", "set": "Sakura Mochi", "image": "cozy-cafe-bear.png", "price": 200 },
-  { "name": "Crescent Dreams", "set": "Moonlight Magic", "image": "crescent-dreams.png", "price": 200 },
-  { "name": "Dessert Bear Cuties", "set": "Sakura Mochi", "image": "dessert-bear-cuties.png", "price": 200 },
-  { "name": "Dino Berry Babies", "set": "Berry Boba Babies", "image": "dino-berry-babies.png", "price": 200 },
-  { "name": "Dreamy Critters", "set": "Moonlight Magic", "image": "dreamy-critters.png", "price": 200 },
-  { "name": "Lunar Sweethearts", "set": "Moonlight Magic", "image": "lunar-sweethearts.png", "price": 200 },
-  { "name": "Midnight Nappers", "set": "Moonlight Magic", "image": "midnight-nappers.png", "price": 200 },
-  { "name": "Mochi & Cream Dreams", "set": "Sakura Mochi", "image": "mochi-and-cream-dreams.png", "price": 200 },
-  { "name": "Mochi Bear Snacks", "set": "Sakura Mochi", "image": "mochi-bear-snacks.png", "price": 200 },
-  { "name": "Moonlit Fluffies", "set": "Moonlight Magic", "image": "moonlit-fluffies.png", "price": 200 },
-  { "name": "Nighttime Companions", "set": "Moonlight Magic", "image": "nighttime-companions.png", "price": 200 },
-  { "name": "Panda & Berry Pals", "set": "Berry Boba Babies", "image": "panda-berry-pals.png", "price": 200 },
-  { "name": "Petal Pastry Pals", "set": "Sakura Mochi", "image": "petal-pastry-pals.png", "price": 200 },
-  { "name": "Sakura Café Moments", "set": "Sakura Mochi", "image": "sakura-cafe-moments.png", "price": 200 },
-  { "name": "Sleeping Under the Stars", "set": "Moonlight Magic", "image": "sleeping-under-stars.png", "price": 200 },
-  { "name": "Starry Night Friends", "set": "Moonlight Magic", "image": "starry-night-friends.png", "price": 200 },
-  { "name": "Twilight Snuggle Pals", "set": "Moonlight Magic", "image": "twilight-snuggle-pals.png", "price": 200 }
+  {
+    "name": "Berry Boba Babies Set",
+    "set": "Berry Boba Babies",
+    "image": "Berry_Boba_Babies_Set/Berry Boba Babies_COVER.png",
+    "price": 249,
+    "description": "A mixed set of adorable pastel animals holding berries, perfect for decorating planners, journals, to-do lists, and aesthetic digital pages. Each character adds sweetness and charm to your layouts.",
+    "images": [
+      "Berry_Boba_Babies_Set/Berry Boba Babies_COVER.png",
+      "Berry_Boba_Babies_Set/Berry Boba Babies_Page2.png",
+      "Berry_Boba_Babies_Set/Berry Boba Babies_Page3.png",
+      "Berry_Boba_Babies_Set/Berry Boba Babies_Page4.png"
+    ]
+  },
+  {
+    "name": "Sakura Mochi Solo",
+    "set": "Sakura Mochi",
+    "image": "Sakura_Mochi_Solo/cover_mochi1.png",
+    "price": 99,
+    "description": "A delightful solo sticker featuring a cute character enjoying Sakura Mochi. Perfect for adding a touch of Japanese sweetness to your collection.",
+    "images": [
+      "Sakura_Mochi_Solo/cover_mochi1.png"
+    ]
+  },
+  {
+    "name": "Sakura Mochi Set",
+    "set": "Sakura Mochi",
+    "image": "Sakura_Mochi_Set/cover_mochi2.png",
+    "price": 249,
+    "description": "A complete set of Sakura Mochi themed stickers. Celebrate the cherry blossom season with these sweet and sticky treats!",
+    "images": [
+      "Sakura_Mochi_Set/cover_mochi2.png",
+      "Sakura_Mochi_Set/Sakura Mochi_Page2.png",
+      "Sakura_Mochi_Set/Sakura Mochi_Page3.png"
+    ]
+  },
+  {
+    "name": "Moonlight Magic Set",
+    "set": "Moonlight Magic",
+    "image": "Moonlight_Magic_Set/cover_magic.png",
+    "price": 249,
+    "description": "Embrace the night with this Moonlight Magic set. Featuring dreamy characters and celestial elements to bring a touch of magic to your journals.",
+    "images": [
+      "Moonlight_Magic_Set/cover_magic.png",
+      "Moonlight_Magic_Set/Moonlight Magic _Page1.png",
+      "Moonlight_Magic_Set/Moonlight Magic_Page2.png",
+      "Moonlight_Magic_Set/Moonlight Magic_Page3.png"
+    ]
+  },
+  {
+    "name": "Bear-ry Sweet Companions",
+    "set": "Berry Boba Babies",
+    "image": "Bearry_Sweet_Companions_Set/bearry-sweet-companions-cover.png",
+    "price": 200,
+    "description": "Add adorable pastel characters to your digital planner or journal. These stickers feature cute boba-loving animals designed to bring charm and fun to your layouts. Perfect aesthetic journaling and everyday digital planning.",
+    "images": [
+      "Bearry_Sweet_Companions_Set/bearry-sweet-companions-cover.png",
+      "Bearry_Sweet_Companions_Set/Bear-ry Sweet Companions_Page2.png",
+      "Bearry_Sweet_Companions_Set/Bear-ry Sweet Companions_Page3.png"
+    ]
+  },
+  {
+    "name": "Bento Blossom Delights",
+    "set": "Sakura Mochi",
+    "image": "Bento_Blossom_Delights_Set/bento-blossom-delights.png",
+    "price": 200,
+    "description": "Lunch time! Adorable bento box themed stickers with a floral blossom twist.",
+    "images": [
+      "Bento_Blossom_Delights_Set/bento-blossom-delights.png",
+      "Bento_Blossom_Delights_Set/Bento Blossom Delights_Page2.png",
+      "Bento_Blossom_Delights_Set/Bento Blossom Delights_Page3.png"
+    ]
+  },
+  {
+    "name": "Berry Baby Blossoms",
+    "set": "Berry Boba Babies",
+    "image": "Berry_Baby_Blossoms_Set/berry-baby-blossoms-cover.png",
+    "price": 200,
+    "description": "A set of soft baby animals in warm pastel tones perfect for decorating planners, study notes, and digital journals.",
+    "images": [
+      "Berry_Baby_Blossoms_Set/berry-baby-blossoms-cover.png",
+      "Berry_Baby_Blossoms_Set/Berry Baby Blossoms_Page2.png",
+      "Berry_Baby_Blossoms_Set/Berry Baby Blossoms_Page3.png"
+    ]
+  },
+  {
+    "name": "Berry Buddies Collection",
+    "set": "Berry Boba Babies",
+    "image": "Berry_Buddies_Collection_Set/Berry Buddies Collection_Cover.png",
+    "price": 200,
+    "description": "A collection of best buddies sharing berries. Friendship and fruit, what could be better?",
+    "images": [
+      "Berry_Buddies_Collection_Set/Berry Buddies Collection_Cover.png",
+      "Berry_Buddies_Collection_Set/Berry Buddies Collection_Page2.png",
+      "Berry_Buddies_Collection_Set/berry-buddies-collection.png"
+    ]
+  },
+  {
+    "name": "Berry Butterfly Friends",
+    "set": "Berry Boba Babies",
+    "image": "Berry_Butterfly_Friends_Set/berry-butterfly-friends-cover.png",
+    "price": 200,
+    "description": "Flutter by with these berry-loving butterflies. Add a touch of nature to your spread.",
+    "images": [
+      "Berry_Butterfly_Friends_Set/berry-butterfly-friends-cover.png",
+      "Berry_Butterfly_Friends_Set/Berry Butterfly Friends_Page2.png",
+      "Berry_Butterfly_Friends_Set/Berry Butterfly Friends_Page3.png"
+    ]
+  },
+  {
+    "name": "Bunny Berry Friends",
+    "set": "Berry Boba Babies",
+    "image": "Bunny_Berry_Friends_Set/bunny-berry-friends-cover.png",
+    "price": 200,
+    "description": "Hop into happiness with these bunny and berry friends stickers.",
+    "images": [
+      "Bunny_Berry_Friends_Set/bunny-berry-friends-cover.png",
+      "Bunny_Berry_Friends_Set/Bunny Berry Friends_Page2.png",
+      "Bunny_Berry_Friends_Set/Bunny Berry Friends_Page3.png"
+    ]
+  },
+  {
+    "name": "Cherry Blossom Treats",
+    "set": "Sakura Mochi",
+    "image": "Cherry_Blossom_Treats_Set/cherry-blossom-treats.png",
+    "price": 200,
+    "description": "Delicious treats inspired by cherry blossoms. Yummy and pink!",
+    "images": [
+      "Cherry_Blossom_Treats_Set/cherry-blossom-treats.png"
+    ]
+  },
+  {
+    "name": "Cosmic Cozy Babies",
+    "set": "Moonlight Magic",
+    "image": "Cosmis_Cozy_Babies_Set/cosmic-cozy-babies.png",
+    "price": 200,
+    "description": "Babies floating in the cosmos, staying cozy among the stars.",
+    "images": [
+      "Cosmis_Cozy_Babies_Set/cosmic-cozy-babies.png",
+      "Cosmis_Cozy_Babies_Set/Cosmic Cozy Babies_Page2.png",
+      "Cosmis_Cozy_Babies_Set/Cosmic Cozy Babies_Page3.png"
+    ]
+  },
+  {
+    "name": "Cozy Café Bear",
+    "set": "Sakura Mochi",
+    "image": "Cozy_Cafe_Bear_Set/cozy-cafe-bear.png",
+    "price": 200,
+    "description": "Relax at the café with this cozy bear. Coffee, pastries, and good vibes.",
+    "images": [
+      "Cozy_Cafe_Bear_Set/cozy-cafe-bear.png",
+      "Cozy_Cafe_Bear_Set/Cozy Café Bear_Page2.png",
+      "Cozy_Cafe_Bear_Set/Cozy Café Bear_Page3.png"
+    ]
+  },
+  {
+    "name": "Crescent Dreams",
+    "set": "Moonlight Magic",
+    "image": "Crescent_Dreams_Set/crescent-dreams.png",
+    "price": 200,
+    "description": "Dream big with these crescent moon themed stickers. Sleepy and serene.",
+    "images": [
+      "Crescent_Dreams_Set/crescent-dreams.png",
+      "Crescent_Dreams_Set/Crescent Dreams_Page2.png",
+      "Crescent_Dreams_Set/Crescent Dreams_Page3.png"
+    ]
+  },
+  {
+    "name": "Dessert Bear Cuties",
+    "set": "Sakura Mochi",
+    "image": "Dessert_Bear_Cuties_Set/dessert-bear-cuties.png",
+    "price": 200,
+    "description": "Bears disguised as desserts? Or desserts that look like bears? Either way, they are cute!",
+    "images": [
+      "Dessert_Bear_Cuties_Set/dessert-bear-cuties.png",
+      "Dessert_Bear_Cuties_Set/Dessert Bear Cuties_Page2.png",
+      "Dessert_Bear_Cuties_Set/Dessert Bear Cuties_Page3.png"
+    ]
+  },
+  {
+    "name": "Dino Berry Babies",
+    "set": "Berry Boba Babies",
+    "image": "Dino_Berry_Babies_Set/dino-berry-babies-cover.png",
+    "price": 200,
+    "description": "Rawr! Tiny dinos enjoying their favorite berries. Prehistoric cuteness.",
+    "images": [
+      "Dino_Berry_Babies_Set/dino-berry-babies-cover.png",
+      "Dino_Berry_Babies_Set/Dino Berry Babies_Page2.png",
+      "Dino_Berry_Babies_Set/Dino Berry Babies_Page3.png"
+    ]
+  },
+  {
+    "name": "Dreamy Critters",
+    "set": "Moonlight Magic",
+    "image": "Dreamy_Critters_Set/dreamy-critters.png",
+    "price": 200,
+    "description": "Critters from your sweetest dreams. Soft colors and gentle expressions.",
+    "images": [
+      "Dreamy_Critters_Set/dreamy-critters.png",
+      "Dreamy_Critters_Set/Dreamy Critters_Page2.png",
+      "Dreamy_Critters_Set/Dreamy Critters_Page3.png"
+    ]
+  },
+  {
+    "name": "Lunar Sweethearts",
+    "set": "Moonlight Magic",
+    "image": "Lunar_Sweetheart_Set/lunar-sweethearts.png",
+    "price": 200,
+    "description": "Sweethearts under the lunar light. Romantic and mystical.",
+    "images": [
+      "Lunar_Sweetheart_Set/lunar-sweethearts.png",
+      "Lunar_Sweetheart_Set/Lunar Sweethearts_Page2.png",
+      "Lunar_Sweetheart_Set/Lunar Sweethearts_Page3.png"
+    ]
+  },
+  {
+    "name": "Midnight Nappers",
+    "set": "Moonlight Magic",
+    "image": "Midnight_Nappers_Set/midnight-nappers.png",
+    "price": 200,
+    "description": "Shhh! These little ones are taking a midnight nap. Quiet and peaceful.",
+    "images": [
+      "Midnight_Nappers_Set/midnight-nappers.png",
+      "Midnight_Nappers_Set/Midnight Nappers_Page2.png",
+      "Midnight_Nappers_Set/Midnight Nappers_Page3.png"
+    ]
+  },
+  {
+    "name": "Mochi & Cream Dreams",
+    "set": "Sakura Mochi",
+    "image": "Mochi_And_Cream_Dreams_Set/mochi-and-cream-dreams.png",
+    "price": 200,
+    "description": "Creamy, dreamy mochi goodness. Soft textures and pastel colors.",
+    "images": [
+      "Mochi_And_Cream_Dreams_Set/mochi-and-cream-dreams.png",
+      "Mochi_And_Cream_Dreams_Set/Mochi & Cream Dreams_Page2.png",
+      "Mochi_And_Cream_Dreams_Set/Mochi & Cream Dreams_Page3.png"
+    ]
+  },
+  {
+    "name": "Mochi Bear Snacks",
+    "set": "Sakura Mochi",
+    "image": "Mochi_Bear_Set/mochi-bear-snacks.png",
+    "price": 200,
+    "description": "Snack time with Mochi Bear! Don't eat them all at once.",
+    "images": [
+      "Mochi_Bear_Set/mochi-bear-snacks.png",
+      "Mochi_Bear_Set/Mochi Bear Snacks_Page2.png",
+      "Mochi_Bear_Set/Mochi Bear Snacks_Page3.png"
+    ]
+  },
+  {
+    "name": "Moonlit Fluffies",
+    "set": "Moonlight Magic",
+    "image": "Moonlit_Fluffies/moonlit-fluffies.png",
+    "price": 200,
+    "description": "Fluffy creatures glowing in the moonlight. Soft and radiant.",
+    "images": [
+      "Moonlit_Fluffies/moonlit-fluffies.png",
+      "Moonlit_Fluffies/Moonlit Fluffies'_Page2.png",
+      "Moonlit_Fluffies/Moonlit Fluffies_Page3.png"
+    ]
+  },
+  {
+    "name": "Nighttime Companions",
+    "set": "Moonlight Magic",
+    "image": "Nighttime_Companions_Set/nighttime-companions.png",
+    "price": 200,
+    "description": "Perfect companions for the night owls. Keeping you company in the dark.",
+    "images": [
+      "Nighttime_Companions_Set/nighttime-companions.png",
+      "Nighttime_Companions_Set/Nighttime Companions_Page2.png",
+      "Nighttime_Companions_Set/Nighttime Companions_Page3.png"
+    ]
+  },
+  {
+    "name": "Panda & Berry Pals",
+    "set": "Berry Boba Babies",
+    "image": "Panda_Berry_Pals_Set/panda-berry-pals-cover.png",
+    "price": 200,
+    "description": "Black, white, and red all over. Pandas love berries too!",
+    "images": [
+      "Panda_Berry_Pals_Set/panda-berry-pals-cover.png",
+      "Panda_Berry_Pals_Set/Panda Berry Pals_Page2.png",
+      "Panda_Berry_Pals_Set/Panda Berry Pals_Page3.png"
+    ]
+  },
+  {
+    "name": "Petal Pastry Pals",
+    "set": "Sakura Mochi",
+    "image": "Petal_Pastry_Pals_Set/petal-pastry-pals.png",
+    "price": 200,
+    "description": "Pastries made of petals? Or friends made of pastries? Sweet and floral.",
+    "images": [
+      "Petal_Pastry_Pals_Set/petal-pastry-pals.png",
+      "Petal_Pastry_Pals_Set/Petal Pastry Pals_Page2.png",
+      "Petal_Pastry_Pals_Set/Petal Pastry Pals_Page3.png"
+    ]
+  },
+  {
+    "name": "Sakura Café Moments",
+    "set": "Sakura Mochi",
+    "image": "Sakura_Cafe_Moments_Set/sakura-cafe-moments.png",
+    "price": 200,
+    "description": "Capture the moments spent at a Sakura Café. Fleeting beauty and lasting memories.",
+    "images": [
+      "Sakura_Cafe_Moments_Set/sakura-cafe-moments.png",
+      "Sakura_Cafe_Moments_Set/Sakura Café Moments_Page2.png",
+      "Sakura_Cafe_Moments_Set/Sakura Café Moments_Page3.png"
+    ]
+  },
+  {
+    "name": "Sleeping Under the Stars",
+    "set": "Moonlight Magic",
+    "image": "Sleeping_Under_Stars_Set/sleeping-under-stars.png",
+    "price": 200,
+    "description": "Camping under the open sky. Stars, sleeping bags, and sweet dreams.",
+    "images": [
+      "Sleeping_Under_Stars_Set/sleeping-under-stars.png",
+      "Sleeping_Under_Stars_Set/Sleeping Under the Stars_Page2.png",
+      "Sleeping_Under_Stars_Set/Sleeping Under the Stars_Page3.png"
+    ]
+  },
+  {
+    "name": "Starry Night Friends",
+    "set": "Moonlight Magic",
+    "image": "Starry_Nights_Friends/starry-night-friends.png",
+    "price": 200,
+    "description": "Friends who gaze at the stars together, stay together.",
+    "images": [
+      "Starry_Nights_Friends/starry-night-friends.png",
+      "Starry_Nights_Friends/Starry Night Friends_Page2.png",
+      "Starry_Nights_Friends/Starry Night Friends_Page3.png"
+    ]
+  },
+  {
+    "name": "Twilight Snuggle Pals",
+    "set": "Moonlight Magic",
+    "image": "Twilight_Snuggle_Pals_Set/twilight-snuggle-pals.png",
+    "price": 200,
+    "description": "Snuggle up as the sun goes down. Twilight is the coziest time of day.",
+    "images": [
+      "Twilight_Snuggle_Pals_Set/twilight-snuggle-pals.png",
+      "Twilight_Snuggle_Pals_Set/Twilight Snuggle Pals_Page2.png",
+      "Twilight_Snuggle_Pals_Set/Twilight Snuggle Pals_Page3.png"
+    ]
+  }
 ]
