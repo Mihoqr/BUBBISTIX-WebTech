@@ -1114,22 +1114,21 @@ button:hover {
 
 .checkout-btn {
     width: 100%;
-    background: linear-gradient(135deg, #f58092 0%, #d63384 100%);
+    background-color: var(--leafy-green);
     color: white;
     border: none;
     padding: 1rem 1em;
     border-radius: 10px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
     font-family: 'Poppins', sans-serif;
-    box-shadow: 0 5px 15px rgba(245, 128, 146, 0.4);
 }
 
 .checkout-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 128, 146, 0.6);
+    transform: none;
+    background-color: #E85D75;
+    box-shadow: none;
 }
 
 .checkout-btn:disabled {
@@ -1348,23 +1347,20 @@ button:hover {
 .pay-now-btn {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, #f58092 0%, #d63384 100%);
+    background-color: var(--leafy-green);
     color: white;
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
     font-family: 'Poppins', sans-serif;
     font-size: 1.3rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(245, 128, 146, 0.4);
 }
 
 .pay-now-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 128, 146, 0.6);
+    background-color: #E85D75;
 }
 
 /* Order Summary Styles */
@@ -1381,6 +1377,10 @@ button:hover {
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(245, 128, 146, 0.2);
+}
+
+.order-item:last-child {
+    border-bottom: none;
 }
 
 .item-image {
@@ -1411,36 +1411,6 @@ button:hover {
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
     color: #333333;
-}
-
-.discount-section {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.discount-input {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #f0f0f0;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.apply-btn {
-    padding: 12px 20px;
-    background: #f58092;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.apply-btn:hover {
-    background: #d63384;
-    transform: translateY(-1px);
 }
 
 .order-totals {
