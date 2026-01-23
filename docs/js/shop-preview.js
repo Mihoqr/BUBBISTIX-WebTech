@@ -312,6 +312,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (checkoutBtn) {
             checkoutBtn.addEventListener('click', function() {
+                if (window.currentProductData) {
+                    const product = window.currentProductData;
+                    const folder = getFolderForSet(product.set);
+                    const imagePath = `../images/stickers/${folder}/${product.image}`;
+                    
+                    // Add to cart logic ensures the cart is not empty before checkout
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    let existingItem = cart.find(item => item.name === product.name);
+                    
+                    if (!existingItem) {
+                        cart.push({ name: product.name, image: imagePath, price: product.price, quantity: 1 });
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                    }
+                }
                 window.location.href = 'checkout.html';
             });
         }

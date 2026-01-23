@@ -590,8 +590,6 @@ button:hover {
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    visibility: hidden; 
-    opacity: 0;
 }
 
 .registration-main::before {

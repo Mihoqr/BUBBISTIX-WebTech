@@ -6,15 +6,6 @@ if (localStorage.getItem('userLoggedIn') === 'true') {
 // 2. ISANG DOMContentLoaded lang para sa lahat ng UI logic
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- FIX #1: I-DEFINE ANG regMain ---
-    const regMain = document.querySelector('.registration-main');
-
-    // --- FIX #2: REVEAL LOGIC ---
-    if (localStorage.getItem('userLoggedIn') !== 'true' && regMain) {
-        regMain.style.visibility = 'visible';
-        regMain.style.opacity = '1';
-    }
-
     // --- PASSWORD RESET MESSAGE LOGIC ---
     const urlParams = new URLSearchParams(window.location.search);
     const message = urlParams.get('message');
