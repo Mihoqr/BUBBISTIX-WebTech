@@ -12,6 +12,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../images/fav_smile.png">
   <script src="../js/registration.js" defer></script>
+<head>
+  <script>
+    // Checker sa loob mismo ng HTML Head
+    if (localStorage.getItem('userLoggedIn') === 'true') {
+      window.location.href = 'purchase.html';
+    }
+  </script>
+  
+  <script src="../js/registration.js" defer></script>
 </head>
 <body>
 <!-- HEADER AND NAVIGATION BAR -->
@@ -69,7 +78,7 @@
       <p>We've sent you an email with a link to update your password.</p>
     </div>
     
-    <form class="login-form" novalidate>
+    <form class="login-form" id="loginForm" novalidate>
       <div class="input-group">
         <input type="email" id="email" name="email" placeholder="Email" required>
       </div>

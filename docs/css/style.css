@@ -590,6 +590,8 @@ button:hover {
     justify-content: center;
     align-items: center;
     padding: 2rem;
+    visibility: hidden; 
+    opacity: 0;
 }
 
 .registration-main::before {
@@ -1776,9 +1778,9 @@ button:hover {
 }
 
 .strawberry-character {
-    width: 250px;
-    height: 250px;
-    object-fit: contain;
+    width: 300px;
+    height: 300px;
+    object-fit:cover;
     animation: bounce 2s infinite;
 }
 
@@ -3054,3 +3056,187 @@ footer {
         text-align: center;
     }
 }
+
+/* --- PURCHASE PAGE STYLES --- */
+
+.purchase-page {
+    background: 
+        linear-gradient(rgba(252, 228, 236, 0.7) 100%),
+        url('../images/background_signup.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+}
+
+.account-sidebar-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    padding: 40px 30px;
+    text-align: center;
+    position: sticky;
+    top: 40px;
+}
+
+.account-label {
+    font-family: 'Sugar-Flare' !important;
+    font-size: 2rem !important;
+    color: var(--primary-pink);
+}
+
+.avatar-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.avatar-frame img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.avatar-pencil-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #5b7c61;
+    border: 2px solid white;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+}
+
+.avatar-pencil-btn:hover { transform: scale(1.1); color: var(--leafy-green); }
+
+.user-name-text { font-family: 'Cute-Sunrise' !important; font-size: 2.5rem !important; margin-bottom: 0; }
+.user-email-text { font-family: 'Poppins'; font-size: 0.9rem; color: #888; }
+
+.purchase-title { font-family: 'Sugar-Flare' !important; color: var(--leafy-green) !important; text-align: left; }
+.purchase-subtitle { font-family: 'Outfit'; color: var(--leafy-green); font-weight: 500; }
+
+.avatar-modal-content {
+    border-radius: 30px;
+    background-color: #fffafb;
+    border: 5px solid var(--powder-pink);
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 10px;
+}
+
+.avatar-option {
+    width: 100%;
+    cursor: pointer;
+    border-radius: 20px;
+    border: 3px solid transparent;
+    transition: 0.3s ease;
+}
+
+.avatar-option:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-pink);
+    background-color: var(--powder-pink);
+}
+
+.font-sugar { font-family: 'Sugar-Flare', sans-serif !important; color: var(--primary-pink); }
+
+/* --- STICKER CARD LAYOUT FIX --- */
+
+.sticker-purchase-card {
+    background: white;
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sticker-details-left { display: flex; align-items: center; }
+
+.sticker-icon-bg {
+    background: var(--powder-pink);
+    padding: 10px;
+    border-radius: 15px;
+    margin-right: 15px;
+}
+
+.sticker-icon-bg img { width: 60px; height: 60px; object-fit: contain; }
+
+.sticker-actions-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    justify-content: center;
+    gap: 10px;
+    flex-basis: 180px; 
+    min-width: 180px;
+}
+.status-badge-custom {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap; 
+}
+
+.status-badge-custom.processing { 
+    background: #FFF9C4 !important; 
+    color: #856404 !important; 
+}
+
+.status-badge-custom.ready-badge { 
+    background: #C8E6C9 !important; 
+    color: #155724 !important; 
+}
+
+.download-btn-locked, .download-btn-ready {
+    width: 100%; 
+    min-height: 45px; 
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.download-btn-locked {
+    background: #eeeeee !important;
+    color: #bbbbbb !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.download-btn-ready {
+    background: var(--leafy-green) !important;
+    color: white !important;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.download-btn-ready:hover {
+    background: var(--primary-pink) !important;
+    transform: scale(1.02);
+}
+

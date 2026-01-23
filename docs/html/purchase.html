@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubbistix | My Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../images/fav_smile.png">
+</head>
+<body class="purchase-page">
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <input id="nav-toggle" type="checkbox"> 
+            <div class="logo-and-toggler-wrapper d-flex justify-content-between align-items-center w-100 p-2 p-lg-0">
+                <a class="navbar-brand" href="../../index.html">
+                    <img src="../images/logo/image.png" alt="BUBBiSTiX logo" class="logo">
+                </a>
+                <div class="pure-css-hamburger d-lg-none">
+                    <label for="nav-toggle" class="hamburger" role="button">
+                        <div class="top-bun"></div>
+                        <div class="meat"></div>
+                        <div class="bottom-bun"></div>
+                    </label>
+                </div>
+            </div> 
+            <div class="collapse navbar-collapse justify-content-lg-center" id="navbarNav">
+                <ul class="navbar-nav nav-links mb-2 mb-lg-0">
+                    <li class="nav-item"><a href="../../index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link">Stickers</a></li>
+                    <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="purchase.html" class="nav-link active"><img src="../images/misc/Account-Icon.png" class="nav-icon"></a></li>
+                    <li class="nav-item"><a href="add-to-cart.html" class="nav-link"><img src="../images/misc/Add-to-cart-Icon.png" class="nav-icon"></a></li>
+                </ul> 
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container py-5 mt-4">
+    <div class="row g-5">
+        <aside class="col-lg-4">
+            <div class="account-sidebar-card shadow-sm">
+                <h2 class="account-label">My Account</h2>
+                
+                <div class="avatar-container">
+                    <div class="avatar-frame">
+                        <img id="display-avatar" src="../images/avatar/pink.png" alt="User Avatar">
+                    </div>
+                    <button class="avatar-pencil-btn" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </button>
+                </div>
+
+                <h3 id="display-name" class="user-name-text">Juan</h3>
+                <p id="display-email" class="user-email-text">juan@example.com</p>
+                
+                <hr class="my-4" style="opacity: 0.1;">
+                
+                <a href="shop.html" class="continue-shopping d-block mb-3">Back to Stickers</a>
+                <button class="btn login-btn w-100 mt-3" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
+            </div>
+        </aside>
+
+        <section class="col-lg-8">
+            <h1 class="purchase-title">My Digital Stickers</h1>
+            <p class="purchase-subtitle">Your kawaii collection is growing! ✨</p>
+
+            <div id="purchase-list" class="mt-4">
+                <div class="sticker-purchase-card shadow-sm">
+                    <div class="sticker-details-left">
+                        <div class="sticker-icon-bg">
+                            <img src="../images/fav_smile.png" alt="sticker">
+                        </div>
+                        <div class="sticker-text">
+                            <h4 class="m-0">Hearty Angela Sticker</h4>
+                            <small class="text-muted">Purchased: Jan 23, 2026</small>
+                        </div>
+                    </div>
+                    <div class="sticker-actions-right">
+                        <span class="status-badge-custom processing">Processing...</span>
+                        <button class="download-btn-locked" disabled>Download</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content avatar-modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title font-sugar">Choose Your Avatar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="avatar-grid">
+          <img src="../images/avatar/pink.png" class="avatar-option" data-color="pink" alt="Pink Avatar">
+          <img src="../images/avatar/blue.png" class="avatar-option" data-color="blue" alt="Blue Avatar">
+          <img src="../images/avatar/green.png" class="avatar-option" data-color="green" alt="Green Avatar">
+          <img src="../images/avatar/gray.png" class="avatar-option" data-color="gray" alt="Gray Avatar">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content logout-modal-content">
+      <div class="modal-body text-center p-4">
+        <h5 class="font-sugar mb-3" style="color: var(--leafy-green);">Leaving so soon?</h5>
+        <p class="user-email-text mb-4">Are you sure you want to log out of your account?</p>
+        
+        <div class="d-grid gap-2">
+          <button type="button" class="btn login-btn w-100" id="confirmLogoutBtn">Yes, Log me out</button>
+          <button type="button" class="btn btn-link text-decoration-none text-muted" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-nav">
+            <ul>
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="shop.html">Stickers</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-copy">
+            <p>Copyright © Bubbistix 2025</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/ui_bootstrap.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // ---Display User Data ---
+    const storedName = localStorage.getItem('userName');
+    const storedEmail = localStorage.getItem('userEmail');
+    const nameDisplay = document.getElementById('display-name');
+    const emailDisplay = document.getElementById('display-email');
+
+    if (storedName && nameDisplay) {
+        nameDisplay.textContent = storedName; // Pinapalitan ang "Juan"
+    }
+    if (storedEmail && emailDisplay) {
+        emailDisplay.textContent = storedEmail; // Pinapalitan ang "juan@example.com"
+    }
+});
+        // --- Avatar Logic ---
+        const mainAvatar = document.getElementById('display-avatar');
+        const options = document.querySelectorAll('.avatar-option');
+
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const selectedImage = this.getAttribute('src');
+                mainAvatar.src = selectedImage;
+
+                if (window.bubbistixUI) {
+                    window.bubbistixUI.showToast({
+                        title: 'Success!',
+                        message: 'Your avatar has been updated! ✨',
+                        position: 'top-right'
+                    });
+                }
+
+                const modalEl = document.getElementById('avatarModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+            });
+        });
+
+        // --- PART 2: Display Stickers Logic with "Memory" & Download Interaction ---
+const purchaseList = document.getElementById('purchase-list');
+const purchasedStickers = JSON.parse(localStorage.getItem('purchasedItems')) || [];
+
+if (purchaseList) {
+    if (purchasedStickers.length > 0) {
+        purchaseList.innerHTML = ''; 
+
+        purchasedStickers.forEach((sticker, index) => {
+            const stickerKey = btoa(sticker.name).substring(0, 10); 
+            const stickerId = `sticker-${stickerKey}`;
+            const isAlreadyReady = localStorage.getItem(`status-${stickerId}`) === 'ready';
+
+            // HTML Structure
+            const stickerCard = `
+                <div class="sticker-purchase-card shadow-sm mb-3">
+                    <div class="sticker-details-left">
+                        <div class="sticker-icon-bg">
+                            <img src="${sticker.image}" alt="${sticker.name}">
+                        </div>
+                        <div class="sticker-text">
+                            <h4 class="m-0">${sticker.name}</h4>
+                            <small class="text-muted">Purchased: ${sticker.purchaseDate}</small>
+                        </div>
+                    </div>
+                    <div class="sticker-actions-right">
+                        <span id="status-${stickerId}" class="status-badge-custom ${isAlreadyReady ? 'ready-badge' : 'processing'}">
+                            ${isAlreadyReady ? 'READY!' : 'Processing...'}
+                        </span>
+                        <button id="btn-${stickerId}" 
+                                class="${isAlreadyReady ? 'download-btn-ready' : 'download-btn-locked'}" 
+                                ${isAlreadyReady ? '' : 'disabled'}>
+                            Download
+                        </button>
+                    </div>
+                </div>
+            `;
+            purchaseList.insertAdjacentHTML('beforeend', stickerCard);
+
+            // KUNIN ANG BUTTON ELEMENT PAGKAPOS I-INSERT SA HTML
+            const btn = document.getElementById(`btn-${stickerId}`);
+
+            // --- DOWNLOAD CLICK LOGIC FUNCTION ---
+            const setupDownloadEffect = (button) => {
+                button.onclick = function() {
+                    button.disabled = true;
+                    button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Saving...`;
+
+                    setTimeout(() => {
+                        // Success State
+                        button.innerHTML = `<i class="fas fa-check"></i> Saved!`;
+                        button.style.backgroundColor = "#5b7c61"; 
+
+                        // Trigger Actual File Download (Optional)
+                        const link = document.createElement('a');
+                        link.href = sticker.image;
+                        link.download = `${sticker.name}.png`;
+                        link.click();
+
+                        setTimeout(() => {
+                            button.disabled = false;
+                            button.innerHTML = "Download";
+                            button.style.backgroundColor = ""; 
+                        }, 2000);
+                    }, 1500);
+                };
+            };
+
+            // --- APPLY LOGIC BASED ON STATUS ---
+            if (isAlreadyReady) {
+                // Kung ready na agad, lagyan na agad ng click effect
+                setupDownloadEffect(btn);
+            } else {
+                // Kung processing pa, hintayin matapos ang 3 seconds bago i-setup ang effect
+                setTimeout(() => {
+                    const badge = document.getElementById(`status-${stickerId}`);
+                    if (badge && btn) {
+                        badge.textContent = 'READY!';
+                        badge.classList.remove('processing');
+                        badge.classList.add('ready-badge');
+
+                        btn.disabled = false;
+                        btn.classList.remove('download-btn-locked');
+                        btn.classList.add('download-btn-ready');
+
+                        localStorage.setItem(`status-${stickerId}`, 'ready');
+                        
+                        // I-setup ang click effect pagkatapos maging ready
+                        setupDownloadEffect(btn);
+                    }
+                }, 3000);
+            }
+        });
+    } else {
+        purchaseList.innerHTML = '<p class="text-center text-muted mt-4">No digital stickers yet. ✨</p>';
+    }
+
+        }
+        // --- Logout Logic (Updated para mag-match sa Login) ---
+      const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
+      if (confirmLogoutBtn) {
+          confirmLogoutBtn.addEventListener('click', function() {
+              // 1. Burahin ang Login Flags (ito yung hinahanap ng code mo sa itaas)
+              localStorage.removeItem('userLoggedIn');
+              localStorage.removeItem('userName');
+              localStorage.removeItem('userEmail');
+
+              // 2. Burahin din ang stickers para malinis
+              localStorage.removeItem('purchasedItems'); 
+
+              // 3. Redirect pabalik sa Home o Login
+              window.location.href = 'registration.html'; 
+    });
+}
+
+</script>
+</body>
+</html>

@@ -462,11 +462,33 @@ function processPayment() {
     
     // Save order item data
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingPurchases = JSON.parse(localStorage.getItem('purchasedItems')) || [];    
     const orderData = {
         items: cart,
         total: finalTotalDisplay, 
         timestamp: new Date().toISOString()
     };
+
+    // --- NEW LOGIC START: Updating My Digital Stickers Library ---
+        // Convert cart items to the "Purchased" format for the Account Page
+        const newPurchases = cart.map(item => ({
+            name: item.name,
+            image: item.image,
+            purchaseDate: new Date().toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            })
+        }));
+
+        // Merge new stickers with old stickers
+        const updatedCollection = [...existingPurchases, ...newPurchases];
+
+        // Save everything to localStorage
+        localStorage.setItem('purchasedItems', JSON.stringify(updatedCollection));
+        localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
+        localStorage.setItem('paymentData', JSON.stringify(paymentData));
+        // --- NEW LOGIC END ---
     
     // Store all data in localStorage
     localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
