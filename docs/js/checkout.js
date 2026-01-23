@@ -368,59 +368,6 @@ function loadCartItems() {
     localStorage.setItem('baseSubtotal', subtotal.toFixed(2));
 }
 
-function applyDiscountCode(code) {
-    const validCodes = {
-        'BUBBLEGUM10': 0.10,
-        'STICKER15': 0.15,
-        'NEWBIE20': 0.20
-    };
-    
-    const baseSubtotal = parseFloat(localStorage.getItem('baseSubtotal')) || 0;
-    const shipping = 0.00;
-    
-    const totalElement = document.getElementById('total');
-    const discountInput = document.getElementById('discountCode');
-    
-    const oldDiscountLine = document.getElementById('discountLine');
-    if (oldDiscountLine) {
-        oldDiscountLine.remove();
-    }
-    localStorage.removeItem('discountAmount'); 
-    
-    let currentTotal = baseSubtotal + shipping;
-    
-    if (validCodes[code]) {
-        const discountAmount = baseSubtotal * validCodes[code];
-        currentTotal -= discountAmount;
-        
-        localStorage.setItem('discountAmount', discountAmount.toFixed(2)); 
-        
-        let discountLine = document.createElement('div');
-        discountLine.id = 'discountLine';
-        discountLine.className = 'total-line';
-        discountLine.style.color = '#28a745';
-        
-        const finalTotalLine = document.querySelector('.total-line.final-total'); 
-        if (finalTotalLine) {
-            finalTotalLine.parentNode.insertBefore(discountLine, finalTotalLine);
-        }
-
-        discountLine.innerHTML = `
-            <span>Discount (${code})</span>
-            <span>-₱${discountAmount.toFixed(2)}</span>
-        `;
-        
-        totalElement.textContent = `PHP ₱ ${currentTotal.toFixed(2)}`;
-        discountInput.style.borderColor = '#28a745';
-        
-        showMessage('Discount applied successfully!', 'success');
-    } else {
-        totalElement.textContent = `PHP ₱ ${currentTotal.toFixed(2)}`;
-        discountInput.style.borderColor = '#dc3545';
-        showMessage('Invalid discount code', 'error');
-    }
-}
-
 // --- Payment and Data Saving ---
 
 function processPayment() {
