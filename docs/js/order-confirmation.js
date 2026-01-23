@@ -1,11 +1,7 @@
 // Order Confirmation Page functionality
 // ES6 + maintainability: arrow init, reduced debug logging
 document.addEventListener('DOMContentLoaded', () => {
-    // Inject the CSS styles you provided earlier (necessary for display)
-    injectConfirmationStyles();
-
     // Load and display all data sections
-    personalizeMessage();
     loadOrderData();
     loadPaymentInfo();
     
@@ -25,15 +21,14 @@ function loadOrderData() {
     
     // Retrieve HTML elements (CRITICAL STEP)
     const orderItemsContainer = document.getElementById('orderItems');
-    const subtotalElement = document.getElementById('subtotal');
     const totalElement = document.getElementById('total');
     
     // Safety check for the parent container before trying to use .closest()
     const totalContainer = totalElement?.closest('.order-totals'); 
 
     // --- Safety Check for Totals ---
-    if (!subtotalElement || !totalElement) {
-        console.error("Order Summary Error: Missing HTML element ID (subtotal or total). Check your order-confirmation.html file.");
+    if (!totalElement) {
+        console.error("Order Summary Error: Missing HTML element ID (total). Check your order-confirmation.html file.");
         if (orderItemsContainer) {
             orderItemsContainer.innerHTML = '<p>Order Summary failed to load. Please check console for errors.</p>';
         }
@@ -49,8 +44,6 @@ function loadOrderData() {
             items = cartItems;
         } else {
             orderItemsContainer.innerHTML = '<p>No order items found. Please contact support.</p>';
-            subtotalElement.textContent = '₱ 0.00';
-            shippingElement.textContent = '₱ 0.00';
             totalElement.textContent = '₱ 0.00';
             return;
         }
@@ -70,8 +63,10 @@ function loadOrderData() {
         
         itemsHTML += `
             <div class="order-item">
+                <img src="${item.image}" alt="${item.name}" class="item-image">
                 <div class="item-details">
-                    <h4 class="item-name">${item.name}</h4>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">₱${itemPrice.toFixed(2)}</div>
                 </div>
                 <div class="item-total">₱${itemTotal.toFixed(2)}</div>
             </div>
@@ -85,9 +80,6 @@ function loadOrderData() {
     let finalTotal = subtotal + shipping;
     
     // Totals computed; display below
-    
-    // These lines should now work because we checked if the elements exist
-    subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
     
     // Handle Discount
     if (discountAmount > 0 && totalContainer) { // Check if totalContainer is available for insertion
@@ -117,21 +109,6 @@ function loadOrderData() {
     // Final total rendered
 }
 
-function personalizeMessage() {
-    const deliveryData = JSON.parse(localStorage.getItem('deliveryData')) || null;
-    
-    // Personalize Confirmation Message
-    const confirmationTitle = document.querySelector('.confirmation-title');
-    const confirmationMessage = document.getElementById('confirmationMessage');
-    
-    if (deliveryData && deliveryData.email) {
-        confirmationMessage.innerHTML = `
-            Your order has been placed successfully. The digital sticker files<br>
-            have been sent to your email address <strong>${deliveryData.email}</strong>
-        `;
-    }
-}
-
 function loadPaymentInfo() {
     const paymentData = JSON.parse(localStorage.getItem('paymentData')) || null;
     const paymentContainer = document.getElementById('paymentDetails');
@@ -143,27 +120,40 @@ function loadPaymentInfo() {
     
     let paymentHTML = '';
     
-    // Display payment information based on the saved method
-    const methodDisplay = paymentData.method.replace(/_/g, ' ');
-    
-    paymentHTML = `
-        <div class="payment-details-confirmed">
-            <div class="info-row">
-                <span class="info-label">Method:</span>
-                <span>${methodDisplay}</span>
+    // Check if the method is Credit Card to display the fields
+    if (paymentData.method === 'credit_card') {
+        const last4 = paymentData.cardNumber ? paymentData.cardNumber.slice(-4) : '0000';
+        // Use placeholders if data is missing (though it should be there if validated)
+        const expiry = paymentData.expiryDate || 'MM/YY';
+        const cardName = paymentData.cardName || 'Cardholder Name';
+        
+        paymentHTML = `
+            <div class="payment-option selected" style="pointer-events: none;">
+                <input type="radio" id="credit-card" name="payment" value="credit_card" checked disabled>
+                <label for="credit-card">Credit Card</label>
             </div>
-            <div class="info-row">
-                <span class="info-label">Status:</span>
-                <span>${paymentData.method === 'cash_on_delivery' ? 'Pay upon delivery' : 'Charged'}</span>
+            
+            <div class="credit-card-fields" style="display: block; margin-top: 15px;">
+                <input type="text" class="checkout-input" value="**** **** **** ${last4}" readonly style="background-color: #f9f9f9; cursor: default;">
+                
+                <div class="card-details">
+                    <input type="text" class="checkout-input half-width" value="${expiry}" readonly style="background-color: #f9f9f9; cursor: default;">
+                    <input type="text" class="checkout-input half-width" value="***" readonly style="background-color: #f9f9f9; cursor: default;">
+                </div>
+                
+                <input type="text" class="checkout-input" value="${cardName}" readonly style="background-color: #f9f9f9; cursor: default;">
             </div>
-            ${paymentData.method === 'credit_card' && paymentData.cardNumber ? `
-            <div class="info-row">
-                <span class="info-label">Card:</span>
-                <span>**** **** **** ${paymentData.cardNumber.slice(-4)}</span>
+        `;
+    } else {
+        // Fallback for other methods (e.g. COD if it existed)
+        const methodDisplay = paymentData.method.replace(/_/g, ' ');
+        paymentHTML = `
+            <div class="payment-option selected" style="pointer-events: none;">
+                <input type="radio" checked disabled>
+                <label>${methodDisplay}</label>
             </div>
-            ` : ''}
-        </div>
-    `;
+        `;
+    }
     
     paymentContainer.innerHTML = paymentHTML;
 }
@@ -174,81 +164,4 @@ function clearOrderData() {
     localStorage.removeItem('deliveryData');
     localStorage.removeItem('paymentData');
     localStorage.removeItem('discountAmount'); 
-}
-
-function injectConfirmationStyles() {
-    // Helper function to inject the necessary styles you provided earlier
-    const style = document.createElement('style');
-    style.textContent = `
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #49705b;
-            min-width: 100px;
-        }
-        .payment-details-confirmed {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-        }
-        .confirmation-title {
-            font-size: 2rem;
-            color: #49705b;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-        .confirmation-message {
-            font-size: 1rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        #discountLine {
-            border-top: 1px dashed #ccc;
-            padding-top: 8px !important;
-            margin-bottom: 5px;
-        }
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.8);
-        }
-        .item-details {
-            flex-grow: 1;
-            margin-right: 15px;
-        }
-        .item-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .item-quantity, .item-price-per {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 3px;
-        }
-        .item-total {
-            font-weight: bold;
-            color: #49705b;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-    `;
-    document.head.appendChild(style);
 }

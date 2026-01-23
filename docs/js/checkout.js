@@ -292,13 +292,11 @@ function initializeCreditCardValidation() {
 function loadCartItems() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderItemsContainer = document.getElementById('orderItems');
-    const subtotalElement = document.getElementById('subtotal');
     const totalElement = document.getElementById('total');
     const payNowBtn = document.getElementById('payNowBtn');
     
     if (cart.length === 0) {
         orderItemsContainer.innerHTML = '<p>Your cart is empty</p>';
-        subtotalElement.textContent = '₱ 0.00';
         totalElement.textContent = 'PHP ₱ 0.00';
         
         // Disable checkout button and show message
@@ -362,7 +360,6 @@ function loadCartItems() {
     const shipping = 0.00; 
     let initialTotal = subtotal + shipping;
     
-    subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
     totalElement.textContent = `PHP ₱ ${initialTotal.toFixed(2)}`; 
 
     localStorage.setItem('baseSubtotal', subtotal.toFixed(2));

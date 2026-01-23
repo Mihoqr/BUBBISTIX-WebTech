@@ -63,22 +63,14 @@
 
       <div class="checkout-left">
         <!-- Thank You Section -->
-        <div class="thank-you-section">
-          <h1 class="confirmation-title">Thank you for your purchase!</h1>
+        <div class="thank-you-section" style="text-align: center;">
+          <h1 class="confirmation-title" style="text-align: center !important;">Thank you for your purchase!</h1>
           <div class="character-image">
             <img src="../images/strawberry3.png" alt="Strawberry Character" class="strawberry-character">
           </div>
-          <p class="confirmation-message" id="confirmationMessage">
-            You can now download your digital stickers in your Profile Purchase History. A copy of your payment details has been sent
+          <p class="confirmation-message" id="confirmationMessage" style="text-align: center;">
+            Your order has been placed successfully. The digital sticker files have been sent to your email address or can be downloaded on your profile.
           </p>
-        </div>
-
-        <!-- Delivery Information -->
-        <div class="delivery-section">
-          <h2 class="section-title">Delivery Information</h2>
-          <div class="delivery-details" id="deliveryDetails">
-            <!-- Delivery info will be populated by JavaScript -->
-          </div>
         </div>
 
         <!-- Payment Information -->
@@ -90,8 +82,9 @@
         </div>
 
         <!-- Back to Home Button -->
-        <div class="back-to-home">
-          <a href="shop.html" class= "continue-shopping-link">Continue Shopping</a>
+        <div class="back-to-home" style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center;">
+          <a href="purchase.html" class="continue-shopping-link">View Purchases</a>
+          <a href="shop.html" class="continue-shopping-link">Continue Shopping</a>
         </div>
       </div>
 
@@ -105,12 +98,9 @@
           </div>
 
           <div class="order-totals">
-            <div class="total-line">
-              <span>Subtotal</span>
-              <span id="subtotal">₱ 0.00</span>
-            </div>
+            <!-- Subtotal Removed -->
             <!-- Shipping Removed -->
-            <div class="total-line final-total">
+            <div class="total-line final-total" style="border-top: none; padding-top: 0; margin-top: 0;">
               <span>Total:</span>
               <span id="total">₱ 0.00</span>
             </div>
