@@ -3278,12 +3278,25 @@ body.sticker-product-page::before {
 /* --- PURCHASE PAGE STYLES --- */
 
 .purchase-page {
+    background: transparent !important;
+    position: relative;
+    min-height: 100vh;
+}
+
+.purchase-page::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
     background: 
         linear-gradient(rgba(252, 228, 236, 0.7) 100%),
-        url('../images/background_signup.png') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-attachment: fixed !important;
+        url('../images/background_signup.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .account-sidebar-card {
