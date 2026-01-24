@@ -1,5 +1,6 @@
 import { Cart } from "../models/cart.model.js";
 import { Sticker } from "../models/sticker.model.js";
+import { Order } from "../models/order.model.js";
 
 /**
  * Add a sticker to cart
@@ -22,6 +23,19 @@ const addToCart = async (req, res) => {
     if (!sticker) {
       return res.status(404).json({
         message: "Sticker not found"
+      });
+    }
+
+    // Check if user already owns this sticker
+    const alreadyOwned = await Order.findOne({
+      user_id,
+      payment_status: "PAID",
+      "items.sticker_id": sticker_id
+    });
+
+    if (alreadyOwned) {
+      return res.status(400).json({
+        message: "You already own this sticker. Cannot add to cart."
       });
     }
 
