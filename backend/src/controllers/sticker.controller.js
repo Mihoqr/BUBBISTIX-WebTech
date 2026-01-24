@@ -158,8 +158,7 @@ const updateSticker = async (req, res) => {
       "price",
       "category_id",
       "preview_images",
-      "file_path",
-      "is_limited"
+      "file_path"
     ];
 
     updatableFields.forEach(field => {
