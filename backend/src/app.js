@@ -4,6 +4,7 @@ import categoryRouter from "./routes/category.route.js";
 import stickerRouter from "./routes/sticker.route.js";
 import cartsRouter from "./routes/cart.route.js";
 import ordersRouter from "./routes/order.route.js";
+import contactMessagesRouter from "./routes/contact_message.route.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/stickers", stickerRouter);
 app.use("/api/v1/carts", cartsRouter);
 app.use("/api/v1/orders", ordersRouter);
+app.use("/api/v1/contactMessages", contactMessagesRouter);
 
 // Test
 app.get("/", (req, res) => {
