@@ -7,6 +7,5 @@ const router = Router();
 
 // Protected download route
 // (replace mockAuth with real JWT middleware later)
-// router.route("/download").get("/:sticker_id", mockAuth, downloadSticker);
 router.get("/:sticker_id", mockAuth, downloadSticker);
 export default router;
