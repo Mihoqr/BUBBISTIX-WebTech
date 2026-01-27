@@ -1,6 +1,7 @@
 import { Cart } from "../models/cart.model.js";
 import { Sticker } from "../models/sticker.model.js";
 import { Order } from "../models/order.model.js";
+import { OwnershipToken } from "../models/ownership_token.model.js";
 
 /**
  * Add a sticker to cart
@@ -37,6 +38,19 @@ const addToCart = async (req, res) => {
       return res.status(400).json({
         message: "You already own this sticker. Cannot add to cart."
       });
+    }
+
+    // If sticker is limited, ensure it is not already owned
+    if (sticker.is_limited) {
+      const alreadyOwned = await OwnershipToken.findOne({
+        sticker_id: sticker._id
+      });
+
+      if (alreadyOwned) {
+        return res.status(400).json({
+          message: `Limited sticker '${sticker.name}' is already sold.`
+        });
+      }
     }
 
     // Get or create cart for user
