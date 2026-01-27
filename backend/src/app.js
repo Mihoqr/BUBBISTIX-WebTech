@@ -1,3 +1,5 @@
+import cors from "cors";
+import path from "path";
 import express from "express";
 import userRouter from "./routes/user.route.js";
 import categoryRouter from "./routes/category.route.js";
@@ -9,9 +11,18 @@ import downloadLogsRouter from "./routes/download_log.route.js";
 
 const app = express();
 
+// CORS
+app.use(cors({
+  origin: "*"
+}));
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/previews",
+  express.static(path.join(process.cwd(), "backend/private/previews"))
+);
 
 // Routes
 app.use("/api/v1/users", userRouter);
