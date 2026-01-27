@@ -178,7 +178,8 @@ const getMyPurchasedStickers = async (req, res) => {
             _id: sticker._id,
             name: sticker.name,
             preview_images: sticker.preview_images,
-            is_limited: item.is_limited
+            is_limited: item.is_limited,
+            purchased_at: order.created_at
           });
         }
       }
