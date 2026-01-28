@@ -1,0 +1,157 @@
+// API base path for authenticated backend requests
+const API_BASE_URL = "http://localhost:4000/api/v1";
+
+// Backend host for serving images and downloads
+const BACKEND_HOST = "http://localhost:4000";
+
+// Initialize profile, purchases, avatar, and logout on page load
+document.addEventListener("DOMContentLoaded", () => {
+  loadUserProfile();
+  loadPurchasedStickers();
+  setupAvatar();
+  setupLogout();
+});
+
+// Fetch and display logged-in user profile details
+async function loadUserProfile() {
+  const nameEl = document.getElementById("display-name");
+  const emailEl = document.getElementById("display-email");
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/getMe`, { cache: "no-store" });
+    if (!res.ok) return;
+
+    const { user } = await res.json();
+    if (nameEl) nameEl.textContent = user.username;
+    if (emailEl) emailEl.textContent = user.email;
+
+  } catch (err) {
+    console.error("Failed to load user profile:", err);
+  }
+}
+
+// Fetch and render purchased stickers for the user
+async function loadPurchasedStickers() {
+  const purchaseList = document.getElementById("purchase-list");
+  if (!purchaseList) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/orders/getMyPurchasedStickers`, {
+      cache: "no-store"
+    });
+
+    const data = await res.json();
+    const stickers = data.stickers || [];
+
+    // Show empty state if no purchases exist
+    if (stickers.length === 0) {
+      purchaseList.innerHTML =
+        `<p class="text-center text-muted mt-4">No digital stickers yet. ✨</p>`;
+      return;
+    }
+
+    purchaseList.innerHTML = "";
+
+    stickers.forEach(sticker => {
+      const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+
+      // Format purchase date for display
+      const purchaseDate = new Date(sticker.purchased_at)
+      .toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+
+      // Build purchased sticker card
+      const card = document.createElement("div");
+      card.className = "sticker-purchase-card shadow-sm mb-3";
+      card.innerHTML = `
+        <div class="sticker-details-left">
+          <div class="sticker-icon-bg">
+            <img src="${imageUrl}" alt="${sticker.name}">
+          </div>
+          <div class="sticker-text">
+            <h4 class="m-0">${sticker.name}</h4>
+            <small class="text-muted">Purchased: ${purchaseDate}</small>
+          </div>
+        </div>
+
+        <div class="sticker-actions-right">
+          <span class="status-badge-custom ready-badge">READY!</span>
+          <button class="download-btn-ready">Download</button>
+        </div>
+      `;
+
+      purchaseList.appendChild(card);
+
+      const btn = card.querySelector("button");
+
+      // Attach download handler with loading effect
+      setupDownloadEffect(btn, sticker._id);
+    });
+
+  } catch (err) {
+    console.error("Failed to load purchases:", err);
+    purchaseList.innerHTML =
+      `<p class="text-danger">Failed to load purchases</p>`;
+  }
+}
+
+// Handle secure download with visual loading feedback
+function setupDownloadEffect(button, stickerId) {
+  button.onclick = () => {
+    button.disabled = true;
+    button.innerHTML =
+      `<span class="spinner-border spinner-border-sm"></span> Saving...`;
+
+    setTimeout(() => {
+      button.innerHTML = `<i class="fas fa-check"></i> Saved!`;
+      button.style.backgroundColor = "#5b7c61";
+
+      // Trigger backend-protected download
+      const link = document.createElement("a");
+      link.href = `${API_BASE_URL}/downloads/${stickerId}`;
+      link.click();
+
+      setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = "Download";
+        button.style.backgroundColor = "";
+      }, 2000);
+
+    }, 1200);
+  };
+}
+
+// Handle avatar selection and modal close
+function setupAvatar() {
+  const mainAvatar = document.getElementById("display-avatar");
+  const options = document.querySelectorAll(".avatar-option");
+
+  options.forEach(option => {
+    option.addEventListener("click", () => {
+      mainAvatar.src = option.src;
+
+      window.bubbistixUI?.showToast({
+        title: "Success!",
+        message: "Your avatar has been updated! ✨",
+        position: "top-right"
+      });
+
+      const modalEl = document.getElementById("avatarModal");
+      bootstrap.Modal.getInstance(modalEl)?.hide();
+    });
+  });
+}
+
+// Clear session data and redirect user on logout
+function setupLogout() {
+  const btn = document.getElementById("confirmLogoutBtn");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "registration.html";
+  });
+}
