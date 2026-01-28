@@ -1,220 +1,224 @@
-const gallery = document.getElementById('gallery');
-const categoryNav = document.getElementById('category-nav');
-const categoryNavMobile = document.getElementById('category-nav-mobile');
-const searchInputs = document.querySelectorAll('#search-input, #search-input-mobile');
-const sortSelectors = document.querySelectorAll('#sort-select, #sort-select-mobile');
+// API base path for shop-related backend endpoints
+const API_BASE_URL = "http://localhost:4000/api/v1";
 
-// Global variable to hold the product data once fetched.
-let products = []; 
+// Backend host for serving sticker images
+const BACKEND_HOST = "http://localhost:4000";
 
-// Function to fetch data from JSON file and initialize the shop
+// DOM references for gallery, navigation, and controls
+const gallery = document.getElementById("gallery");
+const categoryNav = document.getElementById("category-nav");
+const categoryNavMobile = document.getElementById("category-nav-mobile");
+const searchInputs = document.querySelectorAll("#search-input, #search-input-mobile");
+const sortSelectors = document.querySelectorAll("#sort-select, #sort-select-mobile");
+
+// State variables for category scroll and sticker data
+let pendingCategoryScroll = null;
+let stickers = [];
+
+// Read category from URL for auto-scroll
+const urlParams = new URLSearchParams(window.location.search);
+pendingCategoryScroll = urlParams.get("category");
+
+// Fetch stickers from backend and initialize shop
 async function initializeShop() {
-    try {
-        // Show loading spinner while fetching products (accessible)
-        if (gallery) {
-            gallery.innerHTML = `
-              <div class="d-flex justify-content-center p-4" aria-label="Loading products">
-                <div class="spinner-border text-danger" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-              </div>`;
-        }
-        // Fetching data from the new JSON path
-        const response = await fetch('../data/inventory.json'); 
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Assign the fetched data to the global 'products' variable
-        products = await response.json(); 
-        console.log("Products loaded successfully.");
+  try {
+    // Show loading spinner while fetching data
+    gallery.innerHTML = `
+      <div class="d-flex justify-content-center p-4">
+        <div class="spinner-border text-danger" role="status"></div>
+      </div>
+    `;
 
-        // Once data is loaded, initialize the gallery and set up event listeners
-        renderGallery();
-        setupEventListeners();
+    const res = await fetch(`${API_BASE_URL}/stickers/getAll`, {
+      cache: "no-store"
+    });
 
-    } catch (e) {
-        console.error("Could not load product data:", e);
-        if (gallery) {
-            gallery.innerHTML = "<p>Error loading product data. Please check the console.</p>";
-        }
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
     }
+
+    const data = await res.json();
+    stickers = data.stickers;
+
+    // Render gallery and activate filters
+    renderGallery();
+    setupEventListeners();
+
+  } catch (error) {
+    console.error("Failed to load stickers:", error);
+    gallery.innerHTML = "<p>Error loading stickers.</p>";
+  }
 }
 
-// Function to get folder name based on set name (Remains unchanged)
-function getFolderName(setName) {
-    switch(setName) {
-        case "Moonlight Magic": return "set_magic";
-        case "Berry Boba Babies": return "set_boba";
-        case "Sakura Mochi": return "set_mochi";
-        default: return "";
-        // Handle unexpected values if needed
-    }
-}
-
-// Function to render the gallery based on filters (Core logic retained)
+// Render sticker gallery with optional search and sorting
 function renderGallery(filterText = "", sortBy = "") {
-    gallery.innerHTML = "";
-    
-    // Clear both navigation lists
-    categoryNav.innerHTML = "";
-    if (categoryNavMobile) {
-        categoryNavMobile.innerHTML = "";
-    }
+  gallery.innerHTML = "";
+  categoryNav.innerHTML = "";
+  categoryNavMobile.innerHTML = "";
 
-    // Group products by set
-    const grouped = {};
-    // Use the global 'products' array
-    let filteredProducts = products; 
+  let filtered = [...stickers];
 
-    // --- Search Filter Logic ---
-    if (filterText) {
-        filteredProducts = filteredProducts.filter(p =>
-          p.name.toLowerCase().includes(filterText.toLowerCase())
-        );
-    }
-
-    // --- Sort Filter Logic ---
-    if (sortBy === "az") {
-        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === "za") {
-        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-    } else if (sortBy === "price-low") {
-        filteredProducts.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "price-high") {
-        filteredProducts.sort((a, b) => b.price - a.price);
-    }
-    
-    if (filteredProducts.length === 0) {
-        gallery.innerHTML = "<p>No products found.</p>";
-        return;
-    }
-    
-    filteredProducts.forEach(product => {
-        if (!grouped[product.set]) grouped[product.set] = [];
-        grouped[product.set].push(product);
-    });
-    
-    // Render category sections and sidebar nav
-    Object.keys(grouped).forEach(set => {
-        const categoryId = set.toLowerCase().replace(/\s+/g, "-");
-
-        // 1. CREATE THE NAV ITEM
-        const navItem = document.createElement("li");
-        navItem.innerHTML = `<a href="#${categoryId}">${set}</a>`;
-        
-        // 2. APPEND TO DESKTOP NAV
-        categoryNav.appendChild(navItem);
-
-        // 3. APPEND TO MOBILE NAV
-        if (categoryNavMobile) {
-            const navItemMobile = navItem.cloneNode(true); 
-            categoryNavMobile.appendChild(navItemMobile);
-        }
-
-        // Category section rendering
-        const category = document.createElement("div");
-        category.classList.add("category");
-        category.id = categoryId;
-        category.innerHTML = `
-          <h2>${set}</h2>
-          <div class="items">
-            ${grouped[set].map(product => {
-              const folder = getFolderName(product.set);
-              const imagePath = `../images/stickers/${folder}/${product.image}`;
-              return `
-                <div class="item">
-                  <a href="shop-preview.html?product=${encodeURIComponent(product.name)}" style="text-decoration: none; color: inherit;">
-                      <img src="${imagePath}" alt="${product.name}">
-                      <p class="gallery-item-name">${product.name}</p>
-                      <p class="gallery-item-price">₱${product.price.toFixed(2)}</p>
-                  </a>
-                  <button class="product-btn" 
-                  onclick="addToCart('${product.name}', '${imagePath}', ${product.price})">Add to Cart</button>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
-        gallery.appendChild(category);
-    });
-}
-
-// Function to set up all event listeners (Search and Sort)
-function setupEventListeners() {
-    // 1. Search event: Loop through all search inputs
-    searchInputs.forEach(input => {
-        input.addEventListener("input", function() {
-            const filterText = this.value; 
-            
-            // SYNC FIX: Update the value of the other search input to match
-            searchInputs.forEach(otherInput => {
-                if (otherInput !== this) {
-                    otherInput.value = filterText;
-                }
-            });
-            
-            const sortValue = sortSelectors[0] ? sortSelectors[0].value : ""; 
-            
-            renderGallery(filterText, sortValue);
-        });
-    });
-
-    // 2. Sort event: Loop through all sort selects
-    sortSelectors.forEach(select => {
-        select.addEventListener("change", function() {
-            const sortValue = this.value; 
-            
-            // SYNC FIX: Update the value of the other select box to match
-            sortSelectors.forEach(otherSelect => {
-                if (otherSelect !== this) {
-                    otherSelect.value = sortValue;
-                }
-            });
-            
-            const filterText = searchInputs[0] ? searchInputs[0].value : "";
-            
-            renderGallery(filterText, sortValue);
-        });
-    });
-}
-
-// Add to cart logic
-function addToCart(name, image, price) {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let existingItem = cart.find(item => item.name === name);
-  if (existingItem) {
-     if (window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function') {
-        window.bubbistixUI.showToast({
-            title: 'Already in Cart',
-            message: `${name} is already in your cart!`,
-            type: 'info'
-        });
-    } else {
-        alert(`${name} is already in your cart!`);
-    }
-    return;
-  } else {
-    cart.push({ name, image, price, quantity: 1 });
+  // Apply search filter
+  if (filterText) {
+    filtered = filtered.filter(sticker =>
+      sticker.name.toLowerCase().includes(filterText.toLowerCase())
+    );
   }
 
-  localStorage.setItem('cart', JSON.stringify(cart));
-  showAddToCartPopup(name);
+  // Apply sorting option
+  switch (sortBy) {
+    case "az":
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "za":
+      filtered.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    case "price-low":
+      filtered.sort((a, b) => a.price - b.price);
+      break;
+    case "price-high":
+      filtered.sort((a, b) => b.price - a.price);
+      break;
+  }
+
+  // Show empty state if no results
+  if (filtered.length === 0) {
+    gallery.innerHTML = "<p>No products found.</p>";
+    return;
+  }
+
+  // Group stickers by category
+  const grouped = {};
+  filtered.forEach(sticker => {
+    if (!sticker.category_id) return;
+
+    const { name, slug } = sticker.category_id;
+
+    if (!grouped[slug]) {
+      grouped[slug] = { name, slug, items: [] };
+    }
+
+    grouped[slug].items.push(sticker);
+  });
+
+  // Render each category section
+  Object.values(grouped).forEach(({ name, slug, items }) => {
+    const navItem = document.createElement("li");
+    navItem.innerHTML = `<a href="#${slug}">${name}</a>`;
+    categoryNav.appendChild(navItem);
+
+    // Duplicate nav item for mobile
+    if (categoryNavMobile) {
+      categoryNavMobile.appendChild(navItem.cloneNode(true));
+    }
+
+    const categoryEl = document.createElement("div");
+    categoryEl.className = "category";
+    categoryEl.id = slug;
+
+    categoryEl.innerHTML = `
+      <h2>${name}</h2>
+      <div class="items">
+        ${items.map(sticker => {
+          const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+          return `
+            <div class="item">
+              <a href="shop-preview.html?id=${sticker._id}" style="text-decoration: none; color: inherit;">
+                <img src="${imageUrl}" alt="${sticker.name}">
+                <p class="gallery-item-name">${sticker.name}</p>
+                <p class="gallery-item-price">₱${sticker.price.toFixed(2)}</p>
+              </a>
+              <button class="product-btn"
+                onclick="addToCart('${sticker._id}', '${sticker.name}', '${imageUrl}', ${sticker.price})">
+                Add to Cart
+              </button>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    gallery.appendChild(categoryEl);
+  });
+
+  // Auto-scroll to category from URL after render
+  if (pendingCategoryScroll) {
+    const target = document.getElementById(pendingCategoryScroll);
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.classList.add("category-highlight");
+
+      setTimeout(() => {
+        target.classList.remove("category-highlight");
+      }, 1500);
+    }
+
+    pendingCategoryScroll = null;
+  }
 }
 
-const showAddToCartPopup = (productName) => {
-  // Use Bootstrap toast via helper
-  if (window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function') {
+// Sync search and sort controls across desktop and mobile
+function setupEventListeners() {
+  searchInputs.forEach(input => {
+    input.addEventListener("input", () => {
+      searchInputs.forEach(i => (i.value = input.value));
+      renderGallery(input.value, sortSelectors[0].value);
+    });
+  });
+
+  sortSelectors.forEach(select => {
+    select.addEventListener("change", () => {
+      sortSelectors.forEach(s => (s.value = select.value));
+      renderGallery(searchInputs[0].value, select.value);
+    });
+  });
+}
+
+// Add selected sticker to cart via backend
+async function addToCart(stickerId, stickerName) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/carts/addToCart`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sticker_id: stickerId })
+    });
+
+    const data = await res.json();
+
+    // Show backend message if request fails
+    if (!res.ok) {
+      showToast("Cart Info", data.message || "Unable to add to cart", "info");
+      return;
+    }
+
+    showToast(
+      "Added to Cart",
+      `${stickerName} has been added to your cart!`,
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Add to cart failed:", error);
+    showToast("Error", "Something went wrong. Please try again.", "error");
+  }
+}
+
+// Display toast notification with fallback alert
+function showToast(title, message, type = "success") {
+  if (window.bubbistixUI && typeof window.bubbistixUI.showToast === "function") {
     window.bubbistixUI.showToast({
-      title: 'Added to Cart',
-      message: `${productName} has been added to your cart!`,
+      title,
+      message,
+      type,
       autohide: true,
       delay: 3000,
-      position: 'top-right'
+      position: "top-right"
     });
+  } else {
+    alert(message);
   }
-};
+}
 
-// Application Entry Point: Starts the data fetching process
+// Initialize shop on page load
 initializeShop();
