@@ -1,87 +1,123 @@
-// Contact success confirmation popup using existing success-popup styling
+// API base path for contact form backend endpoint
+const API_BASE_URL = "http://localhost:4000/api/v1";
 
-// Contact success: Prefer Bootstrap toast, fallback to legacy success popup
-document.addEventListener('DOMContentLoaded', () => {
-  const contactForm = document.querySelector('section.contact form');
+// Initialize contact form submission logic on page load
+document.addEventListener("DOMContentLoaded", () => {
+  const contactForm = document.querySelector("section.contact form");
   if (!contactForm) return;
 
-  const canToast = !!(window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function');
+  // Check if custom toast UI helper is available
+  const canToast =
+    window.bubbistixUI &&
+    typeof window.bubbistixUI.showToast === "function";
 
-  // Determine correct image path depending on current page location
-  const path = window.location.pathname.replace(/\\/g, '/');
-  const imgPath = path.includes('/docs/html/')
-    ? '../images/strawberry5.png'
-    : 'docs/images/strawberry5.png';
-
-  if (canToast) {
-    // Use toast for success feedback; keep focus accessible
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      contactForm.reset();
-      window.bubbistixUI.showToast({
-        title: '🎉 Message sent!',
-        message: 'Thanks for reaching out — your note is on its way to our inbox 💌',
-        autohide: true,
-        delay: 3000,
-        position: 'center',
-        size: 'xl',
-        backdrop: 'blur'
-      });
-    });
-    return; // Skip legacy popup path when toast is available
-  }
-
-  // Fallback: Inject legacy popup markup and styles only when toast isn't available
-  if (!document.getElementById('contactPopup')) {
-    const popup = document.createElement('div');
-    popup.id = 'contactPopup';
-    popup.className = 'success-popup hidden';
-    popup.innerHTML = `
-      <div class="success-content">
-        <h2 class="success-message">🎉 Message sent!</h2>
-        <div class="success-image success-image-centered">
-          <img src="${imgPath}" alt="Strawberry">
-        </div>
-        <p class="success-redirect">Thanks for reaching out — your note is on its way to our inbox 💌</p>
-        <button class="login-btn success-btn" id="contactOkBtn">OK, yay! 💕</button>
-      </div>
-    `;
-    document.body.appendChild(popup);
-
-    const styleId = 'contactPopupStyle';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.textContent = `
-        #contactPopup .success-message { margin-bottom: 0.75rem; }
-        #contactPopup .success-image { height: auto; margin: 0.5rem 0; overflow: visible; display: flex; justify-content: center; align-items: center; text-align: center; }
-        #contactPopup .success-image img { width: 360px; height: auto; display: block; margin: 0 auto; }
-        #contactPopup .success-redirect { margin: 0.5rem 0; font-size: 0.95rem; }
-        #contactPopup .success-btn { margin-top: 0.5rem; padding: 0.5rem 1rem; width: auto; }
-        @media (max-width: 480px) {
-          #contactPopup .success-image img { width: 310px; }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }
-
-  const popupEl = document.getElementById('contactPopup');
-
-  // Fallback: Legacy popup behavior
-  contactForm.addEventListener('submit', (e) => {
+  // Handle contact form submission
+  contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    popupEl.classList.remove('hidden');
-    popupEl.style.display = 'flex';
-    contactForm.reset();
 
-    const okBtn = document.getElementById('contactOkBtn');
-    if (okBtn) {
-      okBtn.focus();
-      okBtn.addEventListener('click', () => {
-        popupEl.style.display = 'none';
-        popupEl.classList.add('hidden');
-      });
+    const formData = new FormData(contactForm);
+    const name = formData.get("name")?.trim();
+    const email = formData.get("email")?.trim();
+    const message = formData.get("comment")?.trim();
+
+    // Block submission if any required field is missing
+    if (!name || !email || !message) {
+      showError("All fields are required 💌");
+      return;
+    }
+
+    try {
+      // Send contact message to backend
+      const res = await fetch(
+        `${API_BASE_URL}/contactMessages/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message })
+        }
+      );
+
+      const data = await res.json();
+
+      // Handle backend validation or server errors
+      if (!res.ok) {
+        showError(data.message || "Failed to send message");
+        return;
+      }
+
+      // Reset form and show success feedback
+      contactForm.reset();
+      showSuccess();
+
+    } catch (err) {
+      console.error("Contact submit error:", err);
+      showError("Server error. Please try again later 💔");
     }
   });
+
+  // Show success feedback using toast or fallback popup
+  function showSuccess() {
+    if (canToast) {
+      window.bubbistixUI.showToast({
+        title: "🎉 Message sent!",
+        message:
+          "Thanks for reaching out — your note is on its way to our inbox 💌",
+        autohide: true,
+        delay: 3000,
+        position: "center",
+        size: "xl",
+        backdrop: "blur"
+      });
+      return;
+    }
+
+    showLegacyPopup();
+  }
+
+  // Display error message using toast or alert fallback
+  function showError(message) {
+    if (canToast) {
+      window.bubbistixUI.showToast({
+        title: "Oops!",
+        message,
+        autohide: true,
+        delay: 3000,
+        position: "center"
+      });
+    } else {
+      alert(message);
+    }
+  }
+
+  // Legacy success popup for environments without toast support
+  function showLegacyPopup() {
+    let popup = document.getElementById("contactPopup");
+
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.id = "contactPopup";
+      popup.className = "success-popup";
+      popup.innerHTML = `
+        <div class="success-content">
+          <h2 class="success-message">🎉 Message sent!</h2>
+          <div class="success-image success-image-centered">
+            <img src="../images/strawberry5.png" alt="Strawberry">
+          </div>
+          <p class="success-redirect">
+            Thanks for reaching out — your note is on its way to our inbox 💌
+          </p>
+          <button class="login-btn success-btn" id="contactOkBtn">
+            OK, yay! 💕
+          </button>
+        </div>
+      `;
+      document.body.appendChild(popup);
+    }
+
+    // Show popup and close on confirmation
+    popup.style.display = "flex";
+    document.getElementById("contactOkBtn").onclick = () => {
+      popup.style.display = "none";
+    };
+  }
 });
