@@ -229,10 +229,58 @@ const deleteSticker = async (req, res) => {
   }
 };
 
+/**
+ * Get stickers by category ID (Public)
+ */
+const getStickersByCategory = async (req, res) => {
+  try {
+    const { category_id } = req.params;
+
+    if (!category_id) {
+      return res.status(400).json({
+        message: "Category ID is required"
+      });
+    }
+
+    // Validate category exists
+    const category = await Category.findById(category_id);
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found"
+      });
+    }
+
+    // Fetch stickers under this category
+    const stickers = await Sticker.find({
+      category_id
+    })
+      .populate("category_id", "name slug")
+      .sort({ created_at: -1 });
+
+    return res.status(200).json({
+      category: {
+        id: category._id,
+        name: category.name,
+        slug: category.slug
+      },
+      stickers
+    });
+
+  } catch (error) {
+    console.error("Get stickers by category ID error:", error);
+
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
+
 export {
   createSticker,
   getAllStickers,
   getStickerById,
   updateSticker,
-  deleteSticker
+  deleteSticker,
+  getStickersByCategory
 };
