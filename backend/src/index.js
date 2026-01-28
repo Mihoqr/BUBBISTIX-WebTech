@@ -3,9 +3,7 @@ import app from "./app.js";
 import connectDB from "./config/database.js";
 
 // Load environment variables
-dotenv.config({
-    path: "./.env"
-});
+dotenv.config();
 
 // Starts the server after a successful database connection
 const startServer = async () => {
