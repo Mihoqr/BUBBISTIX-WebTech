@@ -145,8 +145,37 @@ const logoutUser = async (req, res) => {
   }
 };
 
+// Get currently authenticated user (Temporary: will implement JWT later)
+const getMe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).select(
+      "_id username full_name email role created_at"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    return res.status(200).json({
+      user
+    });
+
+  } catch (error) {
+    console.error("Get me error:", error);
+
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
+
 export {
   registerUser,
   loginUser,
-  logoutUser
+  logoutUser,
+  getMe
 };
