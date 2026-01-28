@@ -1,456 +1,181 @@
-// Checkout page functionality
-// ES6 + accessibility refactor: arrow handlers, const/let, and clearer docs.
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if cart is empty and redirect if necessary
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (cart.length === 0) {
-        // Show message and redirect after a delay
-        showMessage('Your cart is empty. Redirecting to shop...', 'error');
-        setTimeout(() => {
-            window.location.href = 'shop.html';
-        }, 2000);
-        return;
-    }
-    
-    // Initialize payment method selection
-    initializePaymentMethods();
-    
-    // Initialize form validation and button handler
-    initializeFormValidation();
-    
-    // Load cart items from localStorage and calculate initial totals
-    loadCartItems();
-    
-    // Initialize discount functionality
-    initializeDiscountCode();
-    
-    // Initialize postal code validation
-    initializePostalCodeValidation();
-    
-    // Initialize credit card validation
-    initializeCreditCardValidation();
+// API base path for checkout-related backend endpoints
+const API_BASE_URL = "http://localhost:4000/api/v1";
 
-    // Clear any previous discount if the page is just loaded (new checkout session)
-    localStorage.removeItem('discountAmount'); 
+// Backend host for serving sticker images
+const BACKEND_HOST = "http://localhost:4000";
+
+// Initialize checkout data, payment options, and form validation on load
+document.addEventListener("DOMContentLoaded", () => {
+  loadCartItems();
+  initializePaymentMethods();
+  initializeFormValidation();
 });
 
-// --- Utility Functions ---
+// Fetch cart items from backend and render checkout summary
+async function loadCartItems() {
+  const orderItemsContainer = document.getElementById("orderItems");
+  const totalElement = document.getElementById("total");
+  const payNowBtn = document.getElementById("payNowBtn");
 
-function showMessage(message, type) {
-    const existingMessage = document.querySelector('.checkout-message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `checkout-message ${type}`;
-    messageDiv.textContent = message;
-    
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
-}
-
-// --- Initialization Functions ---
-
-function initializePaymentMethods() {
-    const paymentOptions = document.querySelectorAll('input[name="payment"]');
-    const creditCardFields = document.getElementById('credit-card-fields');
-    const payNowBtn = document.getElementById('payNowBtn');
-    
-    paymentOptions.forEach(option => {
-        option.addEventListener('change', function() {
-            // Toggle visibility based on payment selection
-            creditCardFields.style.display = (this.value === 'credit_card') ? 'block' : 'none';
-            
-            // Update button text based on payment method
-            if (this.value === 'cash_on_delivery') {
-                payNowBtn.textContent = 'Place Order';
-            } else {
-                payNowBtn.textContent = 'Pay Now';
-            }
-        });
+  try {
+    // Retrieve current cart from backend
+    const res = await fetch(`${API_BASE_URL}/carts/getCart`, {
+      cache: "no-store"
     });
 
-    // Set initial state based on checked radio
-    const codRadio = document.getElementById('cash-on-delivery');
-    if (codRadio && codRadio.checked) {
-        creditCardFields.style.display = 'none';
-        payNowBtn.textContent = 'Place Order';
+    const data = await res.json();
+    const cart = data.cart;
+
+    // Handle empty cart state and disable payment
+    if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
+      orderItemsContainer.innerHTML = "<p>Your cart is empty</p>";
+      totalElement.textContent = "PHP ₱ 0.00";
+
+      disablePayButton(payNowBtn);
+      return;
     }
-}
 
-function initializeFormValidation() {
-    const payNowBtn = document.getElementById('payNowBtn');
-
-    payNowBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        // If validation fails, skip processing and show errors
-        if (!validateForm()) {
-            showMessage('Please correct the highlighted fields before proceeding.', 'error');
-            return;
-        }
-
-        // Show confirmation modal before processing payment
-        const modalEl = document.getElementById('confirmPaymentModal');
-        if (modalEl) {
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
-
-            const confirmBtn = document.getElementById('confirmPayBtn');
-            if (confirmBtn) {
-                // Avoid multiple bindings
-                confirmBtn.onclick = () => {
-                    modal.hide();
-                    processPayment();
-                };
-            }
-        } else {
-            // Fallback if modal is somehow missing
-            processPayment();
-        }
-    });
-}
-
-function validateForm() {
-    // 0. Check if cart is empty
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (cart.length === 0) {
-        showMessage('Your cart is empty. Please add items before checkout.', 'error');
-        return false;
-    }
-    
-    // 1. Validate mandatory contact fields
-    const requiredFields = [
-        'email'
-    ];
-    
-    let isValid = true;
-    
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (!field || !field.value.trim()) { // Check if field exists and is empty
-            if (field) field.style.borderColor = '#dc3545';
-            isValid = false;
-        } else {
-            if (field) field.style.borderColor = '#ddd';
-        }
-    });
-    
-    // 2. Validate payment method specific fields
-    const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
-
-    if (paymentMethod === 'credit_card') {
-        const cardFields = ['cardNumber', 'expiryDate', 'cvv', 'cardName'];
-        cardFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field && !field.value.trim()) {
-                field.style.borderColor = '#dc3545';
-                isValid = false;
-            } else if (field) {
-                field.style.borderColor = '#ddd';
-            }
-        });
-    }
-    
-    // Do NOT show an alert here, just return the boolean result
-    return isValid;
-}
-
-// --- Discount Logic (Unchanged from last fix) ---
-
-function initializeDiscountCode() {
-    const applyBtn = document.getElementById('applyDiscount');
-    const discountInput = document.getElementById('discountCode');
-    
-    const handler = function() {
-        const code = discountInput.value.trim().toUpperCase();
-        applyDiscountCode(code);
-    };
-
-    applyBtn.addEventListener('click', handler);
-    discountInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handler();
-        }
-    });
-}
-
-
-
-function initializeCreditCardValidation() {
-    const cardNumberInput = document.getElementById('cardNumber');
-    const expiryDateInput = document.getElementById('expiryDate');
-    const cvvInput = document.getElementById('cvv');
-    
-    // Credit Card Number Validation
-    if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', function(e) {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Limit to 16 digits
-            if (this.value.length > 16) {
-                this.value = this.value.substring(0, 16);
-            }
-            
-            // Add spaces every 4 digits for better readability
-            let value = this.value.replace(/\s/g, '');
-            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
-            if (formattedValue.length > 19) { // 16 digits + 3 spaces
-                formattedValue = formattedValue.substring(0, 19);
-            }
-            this.value = formattedValue;
-        });
-        
-        cardNumberInput.addEventListener('keypress', function(e) {
-            // Allow: backspace, delete, tab, escape, enter
-            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                (e.keyCode === 65 && e.ctrlKey === true) ||
-                (e.keyCode === 67 && e.ctrlKey === true) ||
-                (e.keyCode === 86 && e.ctrlKey === true) ||
-                (e.keyCode === 88 && e.ctrlKey === true)) {
-                return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    // Expiry Date Validation
-    if (expiryDateInput) {
-        // Normalize input to MM/YY while typing
-        expiryDateInput.addEventListener('input', (e) => {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Limit to 4 digits
-            if (this.value.length > 4) {
-                this.value = this.value.substring(0, 4);
-            }
-            
-            // Add slash after 2 digits
-            if (this.value.length >= 2) {
-                this.value = this.value.substring(0, 2) + '/' + this.value.substring(2, 4);
-            }
-        });
-        
-        // Restrict keys to digits and common control keys
-        expiryDateInput.addEventListener('keypress', (e) => {
-            // Allow: backspace, delete, tab, escape, enter
-            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                (e.keyCode === 65 && e.ctrlKey === true) ||
-                (e.keyCode === 67 && e.ctrlKey === true) ||
-                (e.keyCode === 86 && e.ctrlKey === true) ||
-                (e.keyCode === 88 && e.ctrlKey === true)) {
-                return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    // CVV Validation
-    if (cvvInput) {
-        cvvInput.addEventListener('input', function(e) {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Limit to 4 digits
-            if (this.value.length > 4) {
-                this.value = this.value.substring(0, 4);
-            }
-        });
-        
-        cvvInput.addEventListener('keypress', function(e) {
-            // Allow: backspace, delete, tab, escape, enter
-            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                (e.keyCode === 65 && e.ctrlKey === true) ||
-                (e.keyCode === 67 && e.ctrlKey === true) ||
-                (e.keyCode === 86 && e.ctrlKey === true) ||
-                (e.keyCode === 88 && e.ctrlKey === true)) {
-                return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
-    }
-}
-
-function loadCartItems() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderItemsContainer = document.getElementById('orderItems');
-    const totalElement = document.getElementById('total');
-    const payNowBtn = document.getElementById('payNowBtn');
-    
-    if (cart.length === 0) {
-        orderItemsContainer.innerHTML = '<p>Your cart is empty</p>';
-        totalElement.textContent = 'PHP ₱ 0.00';
-        
-        // Disable checkout button and show message
-        if (payNowBtn) {
-            payNowBtn.disabled = true;
-            payNowBtn.textContent = 'Cart is Empty';
-            payNowBtn.style.backgroundColor = '#ccc';
-            payNowBtn.style.cursor = 'not-allowed';
-            payNowBtn.style.opacity = '0.5';
-            payNowBtn.style.color = '#666';
-            payNowBtn.style.border = '1px solid #999';
-            payNowBtn.style.boxShadow = 'none';
-            payNowBtn.onclick = function(e) {
-                e.preventDefault();
-                showMessage('Please add items to your cart before proceeding to checkout.', 'error');
-                return false;
-            };
-        }
-        
-        // Show message to user
-        showMessage('Please add items to your cart before proceeding to checkout.', 'error');
-        return;
-    }
-    
-    // Enable checkout button if cart has items
-    if (payNowBtn) {
-        payNowBtn.disabled = false;
-        payNowBtn.style.backgroundColor = '';
-        payNowBtn.style.cursor = 'pointer';
-        payNowBtn.style.opacity = '1';
-        payNowBtn.style.color = '';
-        payNowBtn.style.border = '';
-        payNowBtn.style.boxShadow = '';
-        payNowBtn.onclick = null; // Remove the prevent default handler
-    }
-    
     let subtotal = 0;
-    orderItemsContainer.innerHTML = '';
-    
-    cart.forEach(item => {
-        const itemPrice = parseFloat(item.price);
-        // Force quantity to 1 for digital items
-        const itemTotal = itemPrice;
+    orderItemsContainer.innerHTML = "";
 
-        subtotal += itemTotal;
-        
-        const orderItem = document.createElement('div');
-        orderItem.className = 'order-item';
-        orderItem.innerHTML = `
-            <img src="${item.image}" alt="${item.name}" class="item-image">
-            <div class="item-details">
-                <div class="item-name">${item.name}</div>
-                <div class="item-price">₱${itemPrice.toFixed(2)}</div>
-            </div>
-            <div class="item-total">₱${itemTotal.toFixed(2)}</div>
-        `;
-        
-        orderItemsContainer.appendChild(orderItem);
+    // Render each cart item and compute subtotal
+    cart.items.forEach(item => {
+      const sticker = item.sticker_id;
+      const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+      const itemTotal = item.price_at_add;
+
+      subtotal += itemTotal;
+
+      const orderItem = document.createElement("div");
+      orderItem.className = "order-item";
+      orderItem.innerHTML = `
+        <img src="${imageUrl}" alt="${sticker.name}" class="item-image">
+        <div class="item-details">
+          <div class="item-name">${sticker.name}</div>
+          <div class="item-price">₱${itemTotal.toFixed(2)}</div>
+        </div>
+        <div class="item-total">₱${itemTotal.toFixed(2)}</div>
+      `;
+
+      orderItemsContainer.appendChild(orderItem);
     });
-    
-    const shipping = 0.00; 
-    let initialTotal = subtotal + shipping;
-    
-    totalElement.textContent = `PHP ₱ ${initialTotal.toFixed(2)}`; 
 
-    localStorage.setItem('baseSubtotal', subtotal.toFixed(2));
+    // Update total amount and enable payment
+    totalElement.textContent = `PHP ₱ ${subtotal.toFixed(2)}`;
+    enablePayButton(payNowBtn);
+
+  } catch (err) {
+    console.error("Checkout load error:", err);
+    orderItemsContainer.innerHTML = "<p>Error loading cart</p>";
+  }
 }
 
-// --- Payment and Data Saving ---
+// Validate form and confirm payment before checkout
+function initializeFormValidation() {
+  const payNowBtn = document.getElementById("payNowBtn");
 
-function processPayment() {
-    const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
-    const totalElement = document.getElementById('total');
-    
-    if (!paymentMethod) {
-        showMessage('Please select a payment method.', 'error');
-        return;
+  payNowBtn.addEventListener("click", e => {
+    e.preventDefault();
+
+    // Stop checkout if form validation fails
+    if (!validateForm()) {
+      showMessage("Please correct the highlighted fields before proceeding.", "error");
+      return;
     }
 
-    const finalTotalDisplay = totalElement.textContent; 
-    
-    // Collect delivery data
-    const deliveryData = {
-        email: document.getElementById('email')?.value,
-        firstName: document.getElementById('firstName')?.value,
-        lastName: document.getElementById('lastName')?.value,
-        address: document.getElementById('address')?.value,
-        postalCode: document.getElementById('postalCode')?.value,
-        city: document.getElementById('city')?.value,
-        phone: document.getElementById('phone')?.value,
-        island: document.getElementById('island-select')?.value,
-        region: document.getElementById('region-select')?.value,
-        province: document.getElementById('province-select')?.value
-    };
-    
-    // Collect payment data
-    const paymentData = {
-        method: paymentMethod
-    };
-    
-    if (paymentMethod === 'credit_card') {
-        paymentData.cardNumber = document.getElementById('cardNumber')?.value || ''; 
-        paymentData.expiryDate = document.getElementById('expiryDate')?.value || '';
-        paymentData.cvv = document.getElementById('cvv')?.value || '';
-        paymentData.cardName = document.getElementById('cardName')?.value || '';
+    const modalEl = document.getElementById("confirmPaymentModal");
+    if (modalEl) {
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      document.getElementById("confirmPayBtn").onclick = async () => {
+        modal.hide();
+        await processPayment();
+      };
+    } else {
+      processPayment();
     }
-    
-    // Save order item data
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingPurchases = JSON.parse(localStorage.getItem('purchasedItems')) || [];    
-    const orderData = {
-        items: cart,
-        total: finalTotalDisplay, 
-        timestamp: new Date().toISOString()
-    };
+  });
+}
 
-    // --- NEW LOGIC START: Updating My Digital Stickers Library ---
-        // Convert cart items to the "Purchased" format for the Account Page
-        const newPurchases = cart.map(item => ({
-            name: item.name,
-            image: item.image,
-            purchaseDate: new Date().toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-            })
-        }));
+// Create order and process payment via backend
+async function processPayment() {
+  const payNowBtn = document.getElementById("payNowBtn");
+  payNowBtn.textContent = "Processing...";
+  payNowBtn.disabled = true;
 
-        // Merge new stickers with old stickers
-        const updatedCollection = [...existingPurchases, ...newPurchases];
+  try {
+    const res = await fetch(`${API_BASE_URL}/orders/create`, {
+      method: "POST"
+    });
 
-        // Save everything to localStorage
-        localStorage.setItem('purchasedItems', JSON.stringify(updatedCollection));
-        localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
-        localStorage.setItem('paymentData', JSON.stringify(paymentData));
-        // --- NEW LOGIC END ---
-    
-    // Store all data in localStorage
-    localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
-    localStorage.setItem('paymentData', JSON.stringify(paymentData));
-    localStorage.setItem('orderData', JSON.stringify(orderData));
-    
-    // Show processing message and disable button
-    const payNowBtn = document.getElementById('payNowBtn');
-    payNowBtn.textContent = 'Processing...';
-    payNowBtn.disabled = true;
-    
-    // Simulate payment processing
-    setTimeout(() => {
-        // Clear cart and temporary subtotal key
-        localStorage.removeItem('cart');
-        localStorage.removeItem('baseSubtotal');
-        
-        // Redirect to order confirmation page
-        window.location.href = 'order-confirmation.html';
-    }, 2000);
+    const data = await res.json();
+
+    // Handle checkout failure
+    if (!res.ok) {
+      showMessage(data.message || "Checkout failed", "error");
+      payNowBtn.textContent = "Pay Now";
+      payNowBtn.disabled = false;
+      return;
+    }
+
+    // Redirect on successful order creation
+    window.location.href = "order-confirmation.html";
+
+  } catch (err) {
+    console.error("Checkout error:", err);
+    showMessage("Something went wrong. Please try again.", "error");
+    payNowBtn.textContent = "Pay Now";
+    payNowBtn.disabled = false;
+  }
+}
+
+// Disable payment button when cart is empty
+function disablePayButton(btn) {
+  btn.disabled = true;
+  btn.textContent = "Cart is Empty";
+  btn.style.backgroundColor = "#ccc";
+  btn.style.cursor = "not-allowed";
+}
+
+// Enable payment button when cart has items
+function enablePayButton(btn) {
+  btn.disabled = false;
+  btn.textContent = "Pay Now";
+  btn.style.backgroundColor = "";
+  btn.style.cursor = "pointer";
+}
+
+// Display temporary checkout messages
+function showMessage(message, type) {
+  const existing = document.querySelector(".checkout-message");
+  if (existing) existing.remove();
+
+  const div = document.createElement("div");
+  div.className = `checkout-message ${type}`;
+  div.textContent = message;
+  document.body.appendChild(div);
+
+  setTimeout(() => div.remove(), 3000);
+}
+
+// Initialize payment method UI state
+function initializePaymentMethods() {
+  const creditCardFields = document.getElementById("credit-card-fields");
+  creditCardFields.style.display = "block";
+}
+
+// Validate required checkout form fields
+function validateForm() {
+  const email = document.getElementById("email");
+  let valid = true;
+
+  if (!email.value.trim()) {
+    email.style.borderColor = "#dc3545";
+    valid = false;
+  } else {
+    email.style.borderColor = "#ddd";
+  }
+
+  return valid;
 }
