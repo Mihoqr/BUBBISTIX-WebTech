@@ -1,5 +1,9 @@
 import bcrypt from "bcrypt";
 import { User } from "../models/user.model.js";
+import { generateToken } from "../utils/jwt.js";
+
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 // Register a User
 const registerUser = async (req, res) => {
@@ -13,14 +17,15 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Password validation (UI rule)
-    if (password.length < 6) {
-      return res.status(400).json({
-        message: "Password must be at least 6 characters long"
-      });
-    }
+    // Password strength validation
+    if (!strongPasswordRegex.test(password)) {
+    return res.status(400).json({
+      message:
+        "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character"
+    });
+  }
 
-    // Check for existing user (business rule)
+    // Check for existing user
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
     });
@@ -42,7 +47,7 @@ const registerUser = async (req, res) => {
       password_hash
     });
 
-    // Respond (never return password info)
+    // Respond (password is never returned)
     return res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -58,9 +63,11 @@ const registerUser = async (req, res) => {
 
     // Mongoose validation error
     if (error.name === "ValidationError") {
-        return res.status(400).json({
-        message: error.message
-        });
+      const firstError = Object.values(error.errors)[0].message;
+
+      return res.status(400).json({
+        message: firstError
+      });
     }
 
     // Duplicate key error (email / username)
@@ -109,9 +116,16 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Successful login response (no token yet)
+    // Generate JWT for authenticated session
+    const token = generateToken({
+      id: user._id,
+      role: user.role
+    });
+
+    // Successful login response with token
     return res.status(200).json({
       message: "Login successful",
+      token,
       user: {
         id: user._id,
         username: user.username,
@@ -145,9 +159,10 @@ const logoutUser = async (req, res) => {
   }
 };
 
-// Get currently authenticated user (Temporary: will implement JWT later)
+// Get currently authenticated user with JWT
 const getMe = async (req, res) => {
   try {
+    // User ID injected by auth middleware
     const userId = req.user.id;
 
     const user = await User.findById(userId).select(
@@ -173,9 +188,42 @@ const getMe = async (req, res) => {
   }
 };
 
+// Request password reset (mock)
+const resetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Email is required to request reset
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required"
+      });
+    }
+
+    // Check if user exists and never reveal whether the user exists)
+    const user = await User.findOne({ email });
+
+    // soon: generate token + send email
+    // now: simulate success response
+
+    // Simulated success response
+    return res.status(200).json({
+      message:
+        "If an account with that email exists, a password reset link has been sent."
+    });
+
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
+
 export {
   registerUser,
   loginUser,
   logoutUser,
-  getMe
+  getMe,
+  resetPassword
 };
