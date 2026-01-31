@@ -172,6 +172,8 @@
 // Old code intentionally kept for future credit card implementation reference
 
 
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // Base API URL for order-related backend requests
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -191,10 +193,19 @@ async function loadLatestOrder() {
   const paymentContainer = document.getElementById("paymentDetails");
 
   try {
-    // Fetch all orders for the logged-in user
+    // Fetch protected order data and redirect if session is invalid
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(`${API_BASE_URL}/orders/getMyOrders`, {
+      headers,
       cache: "no-store"
     });
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
     const orders = data.orders || [];
