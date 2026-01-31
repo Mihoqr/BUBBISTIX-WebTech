@@ -16,27 +16,34 @@ const toTitleCase = (value) => {
 const userSchema = new mongoose.Schema(
   {
     username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      minlength: 3,
-      maxlength: 20,
-      match: [
-        /^[a-z0-9_]+$/,
-        "Username can only contain lowercase letters, numbers, and underscores"
-      ]
-    },
+    type: String,
+    required: [true, "Username is required"],
+    minlength: [3, "Username must be at least 3 characters"],
+    maxlength: [20, "Username must not exceed 20 characters"],
+    match: [
+      /^[a-z0-9_]+$/,
+      "Username can only contain lowercase letters, numbers, and underscores"
+    ],
+    unique: true,
+    trim: true,
+    lowercase: true
+  },
 
     full_name: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 3,
-      maxlength: 50,
-      set: toTitleCase
+    type: String,
+    required: [true, "Full name is required"],
+    trim: true,
+    minlength: [3, "Full name must be at least 3 characters"],
+    maxlength: [50, "Full name must not exceed 50 characters"],
+    validate: {
+      validator: function (value) {
+        // Must contain at least two words
+        return value.trim().split(/\s+/).length >= 2;
+      },
+      message: "Please enter both your first and last name"
     },
+    set: toTitleCase
+  },
 
     email: {
       type: String,
