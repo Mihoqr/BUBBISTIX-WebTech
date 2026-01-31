@@ -1,8 +1,13 @@
-// Handle form submission: Prefer toast, fallback to legacy success popup
-document.getElementById('createAccountForm').addEventListener('submit', (e) => {
+// Handle create account form submission
+document.getElementById('createAccountForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const canToast = !!(window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function');
 
+  // Check if toast UI helper is available
+  const canToast = !!(window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function');
+  // Base API endpoint for auth requests
+  const API_BASE = 'http://localhost:4000/api/v1';
+
+  // Cache form and input references
   const form = e.currentTarget;
   const usernameInput = form.querySelector('#username');
   const fullnameInput = form.querySelector('#fullname');
@@ -10,67 +15,123 @@ document.getElementById('createAccountForm').addEventListener('submit', (e) => {
   const passwordInput = form.querySelector('#password');
   const submitBtn = form.querySelector('.login-btn');
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // fallback pattern
+  // Validation patterns
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  // Optional validation utility
   const V = window.bubbistixValidate || {};
   let valid = true;
 
-  // Validate inputs and mark ARIA invalid appropriately
-  if (!usernameInput || !(V.minLength ? V.minLength(usernameInput.value, 2) : usernameInput.value.trim().length >= 2)) {
+  // Client side validation
+  // Validate username length
+  if (!usernameInput || usernameInput.value.trim().length < 3) {
     valid = false;
-    V.setFieldError ? V.setFieldError(usernameInput, 'Please enter a valid username.') : usernameInput?.setAttribute('aria-invalid', 'true');
+    V.setFieldError
+      ? V.setFieldError(usernameInput, 'Username must be at least 3 characters.')
+      : usernameInput.setAttribute('aria-invalid', 'true');
   } else {
-    V.clearFieldError ? V.clearFieldError(usernameInput) : usernameInput.removeAttribute('aria-invalid');
+    V.clearFieldError?.(usernameInput);
   }
 
-  if (!fullnameInput || !(V.minLength ? V.minLength(fullnameInput.value, 2) : fullnameInput.value.trim().length >= 2)) {
+  // Validate full name contains at least two words
+  const fullNameWords = fullnameInput.value.trim().split(/\s+/);
+  if (!fullnameInput || fullNameWords.length < 2) {
     valid = false;
-    V.setFieldError ? V.setFieldError(fullnameInput, 'Please provide your first and last name.') : fullnameInput?.setAttribute('aria-invalid', 'true');
+    V.setFieldError
+      ? V.setFieldError(fullnameInput, 'Please enter your first and last name.')
+      : fullnameInput.setAttribute('aria-invalid', 'true');
   } else {
-    V.clearFieldError ? V.clearFieldError(fullnameInput) : fullnameInput.removeAttribute('aria-invalid');
+    V.clearFieldError?.(fullnameInput);
   }
 
-  if (!emailInput || !(V.isEmail ? V.isEmail(emailInput.value) : emailRegex.test(emailInput.value.trim()))) {
+  // Validate email format
+  if (!emailInput || !emailRegex.test(emailInput.value.trim())) {
     valid = false;
-    V.setFieldError ? V.setFieldError(emailInput, 'Please enter a valid email address.') : emailInput?.setAttribute('aria-invalid', 'true');
+    V.setFieldError
+      ? V.setFieldError(emailInput, 'Please enter a valid email address.')
+      : emailInput.setAttribute('aria-invalid', 'true');
   } else {
-    V.clearFieldError ? V.clearFieldError(emailInput) : emailInput.removeAttribute('aria-invalid');
+    V.clearFieldError?.(emailInput);
   }
 
-  if (!passwordInput || !(V.minLength ? V.minLength(passwordInput.value, 6) : passwordInput.value.trim().length >= 6)) {
+  // Validate strong password
+  if (!passwordInput || !strongPasswordRegex.test(passwordInput.value)) {
     valid = false;
-    V.setFieldError ? V.setFieldError(passwordInput, 'Password must be at least 6 characters.') : passwordInput?.setAttribute('aria-invalid', 'true');
+    V.setFieldError
+      ? V.setFieldError(
+          passwordInput,
+          'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+        )
+      : passwordInput.setAttribute('aria-invalid', 'true');
   } else {
-    V.clearFieldError ? V.clearFieldError(passwordInput) : passwordInput.removeAttribute('aria-invalid');
+    V.clearFieldError?.(passwordInput);
   }
 
+  // Stop submission if validation fails
   if (!valid) return;
 
-  // Show spinner and mark form busy
+  // Set loading state and disable submit
   form.setAttribute('aria-busy', 'true');
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-      Creating account...
-    `;
-  }
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Creating account...
+  `;
 
-  if (canToast) {
-    window.bubbistixUI.showToast({
-      title: 'Account successfully created!',
-      message: 'Please sign in. Redirecting you to the sign-in page.',
+  try {
+    // Send registration request to backend
+    const response = await fetch(`${API_BASE}/users/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: usernameInput.value.trim(),
+        full_name: fullnameInput.value.trim(),
+        email: emailInput.value.trim(),
+        password: passwordInput.value
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    // Handle backend validation or server errors
+    if (!response.ok) {
+      throw new Error(data.message || 'Unable to create account.');
+    }
+
+    // Show success feedback and redirect
+    canToast && window.bubbistixUI.showToast({
+      title: 'Account created!',
+      message: 'Redirecting you to the sign-in page.',
       autohide: true,
       delay: 2000,
       position: 'center',
       size: 'xl',
       backdrop: 'blur'
     });
+
+    setTimeout(() => {
+      window.location.href = 'registration.html';
+    }, 2000);
+
+  } catch (error) {
+    console.error('Create account error:', error);
+
+    // Show registration error feedback
+    canToast && window.bubbistixUI.showToast({
+      title: 'Registration failed',
+      message: error.message,
+      autohide: true,
+      delay: 3000,
+      variant: 'danger',
+      position: 'center'
+    });
+
+  } finally {
+    // Restore form state after request completes
+    form.removeAttribute('aria-busy');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create';
   }
-
-  // Redirect after delay regardless of toast availability
-  setTimeout(() => {
-    window.location.href = 'registration.html';
-  }, 2000);
 });
-
-// Removed legacy goToLogin and popup fallback; relying on toast + timed redirect
