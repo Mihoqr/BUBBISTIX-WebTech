@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authMiddleware from "../middleware/auth.middleware.js";
 import { createContactMessage,
          getAllContactMessages,
          updateContactMessageStatus,
@@ -9,8 +10,8 @@ const router = Router();
 
 // ContactMessage management routes
 router.route("/create").post(createContactMessage);
-router.route("/getAll").get(getAllContactMessages);
-router.route("/update/:id").patch(updateContactMessageStatus);
-router.route("/delete/:id").delete(deleteContactMessage);
+router.get("/getAll", authMiddleware, getAllContactMessages);
+router.patch("/update/:id", authMiddleware, updateContactMessageStatus);
+router.delete("/delete/:id", authMiddleware, deleteContactMessage);
 
 export default router;

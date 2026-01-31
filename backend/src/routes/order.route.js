@@ -1,5 +1,5 @@
 import { Router } from "express";
-import mockAuth from "../middleware/mockAuth.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 import { createOrder,
          getMyOrders,
          getOrderById,
@@ -8,8 +8,7 @@ import { createOrder,
 
 const router = Router();
 
-// Temporary: create mock user for now
-router.use(mockAuth);
+router.use(authMiddleware);
 
 // Order management routes
 router.route("/create").post(createOrder);

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authMiddleware from "../middleware/auth.middleware.js";
 import { createCategory,
          getAllCategories,
          updateCategory,
@@ -8,9 +9,9 @@ import { createCategory,
 const router = Router();
 
 // Category management routes
-router.route("/create").post(createCategory);
 router.route("/getAll").get(getAllCategories);
-router.route("/update/:id").put(updateCategory);
-router.route("/delete/:id").delete(deleteCategory);
+router.post("/create", authMiddleware, createCategory);
+router.put("/update/:id", authMiddleware, updateCategory);
+router.delete("/delete/:id", authMiddleware, deleteCategory);
 
 export default router;

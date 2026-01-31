@@ -1,9 +1,10 @@
 import { Router } from "express";
-import mockAuth from "../middleware/mockAuth.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 import { registerUser,
          loginUser,
          logoutUser,
-         getMe
+         getMe,
+         resetPassword
  } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -12,6 +13,7 @@ const router = Router();
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(logoutUser);
-router.get("/getMe", mockAuth, getMe);
+router.get("/getMe", authMiddleware, getMe);
+router.route("/resetPassword").post(resetPassword);
 
 export default router;
