@@ -5,7 +5,8 @@ import { createSticker,
          getStickerById,
          updateSticker,
          deleteSticker,
-         getStickersByCategory
+         getStickersByCategory,
+         createMultipleStickers
  } from "../controllers/sticker.controller.js";
 
 const router = Router();
@@ -17,5 +18,6 @@ router.route("/getByCategory/:category_id").get(getStickersByCategory);
 router.post("/create", authMiddleware, createSticker);
 router.put("/update/:id", authMiddleware, updateSticker);
 router.delete("/delete/:id", authMiddleware, deleteSticker);
+router.route("/createMultipleStickers").post(createMultipleStickers);
 
 export default router;

@@ -276,11 +276,118 @@ const getStickersByCategory = async (req, res) => {
   }
 };
 
+/**
+ * Create multiple stickers (Admin / Backend only)
+ */
+const createMultipleStickers = async (req, res) => {
+  try {
+    const { stickers } = req.body;
+
+    // Basic validation
+    if (!Array.isArray(stickers) || stickers.length === 0) {
+      return res.status(400).json({
+        message: "Stickers array is required"
+      });
+    }
+
+    // Validate required fields per sticker
+    for (const sticker of stickers) {
+      const {
+        name,
+        description,
+        price,
+        category_id,
+        preview_images,
+        file_path
+      } = sticker;
+
+      if (
+        !name ||
+        !description ||
+        price === undefined ||
+        !category_id ||
+        !preview_images ||
+        !file_path
+      ) {
+        return res.status(400).json({
+          message: "Each sticker must contain all required fields"
+        });
+      }
+    }
+
+    // Validate category
+    const uniqueCategoryIds = [
+      ...new Set(stickers.map(s => s.category_id))
+    ];
+
+    const categoryCount = await Category.countDocuments({
+      _id: { $in: uniqueCategoryIds }
+    });
+
+    if (categoryCount !== uniqueCategoryIds.length) {
+      return res.status(400).json({
+        message: "One or more category IDs are invalid"
+      });
+    }
+
+    // Check for duplicate sticker names
+    const names = stickers.map(s => s.name);
+    const existingStickers = await Sticker.find({
+      name: { $in: names }
+    }).select("name");
+
+    const existingNames = existingStickers.map(s => s.name);
+
+    // Filter out duplicates
+    const newStickers = stickers.filter(
+      s => !existingNames.includes(s.name)
+    );
+
+    if (newStickers.length === 0) {
+      return res.status(409).json({
+        message: "All stickers already exist",
+        skipped: existingNames
+      });
+    }
+
+    // Normalize data
+    const preparedStickers = newStickers.map(s => ({
+      ...s,
+      is_limited: s.is_limited ?? false
+    }));
+
+    // Insert in bulk
+    const createdStickers = await Sticker.insertMany(preparedStickers);
+
+    return res.status(201).json({
+      message: "Bulk sticker creation completed",
+      created_count: createdStickers.length,
+      skipped_count: existingNames.length,
+      skipped_names: existingNames,
+      stickers: createdStickers
+    });
+
+  } catch (error) {
+    console.error("Create multiple stickers error:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: error.message
+      });
+    }
+
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
+
 export {
   createSticker,
   getAllStickers,
   getStickerById,
   updateSticker,
   deleteSticker,
-  getStickersByCategory
+  getStickersByCategory,
+  createMultipleStickers
 };
