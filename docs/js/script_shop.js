@@ -1,3 +1,5 @@
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // API base path for shop-related backend endpoints
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -178,11 +180,20 @@ function setupEventListeners() {
 // Add selected sticker to cart via backend
 async function addToCart(stickerId, stickerName) {
   try {
+    // Add item to protected cart and redirect if session is invalid
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(`${API_BASE_URL}/carts/addToCart`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ sticker_id: stickerId })
     });
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
 
@@ -219,6 +230,6 @@ function showToast(title, message, type = "success") {
     alert(message);
   }
 }
-
+window.addToCart = addToCart;
 // Initialize shop on page load
 initializeShop();

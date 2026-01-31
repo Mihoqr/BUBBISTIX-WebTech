@@ -1,3 +1,5 @@
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // API base path for sticker, cart, and checkout backend endpoints
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -274,13 +276,20 @@ function setupActionButtons() {
 // Add sticker to cart with feedback toast
 async function addToCart(stickerId, stickerName) {
   try {
+    // Add item to protected cart and handle unauthorized access
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(`${API_BASE_URL}/carts/addToCart`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers,
       body: JSON.stringify({ sticker_id: stickerId })
     });
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
 
@@ -310,13 +319,22 @@ async function addToCart(stickerId, stickerName) {
 }
 
 // Add sticker to cart and immediately proceed to checkout
-async function addToCartAndCheckout(stickerId, stickerName) {
+async function addToCartAndCheckout(stickerId) {
   try {
+    // Add item to protected cart and handle unauthorized access
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(`${API_BASE_URL}/carts/addToCart`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ sticker_id: stickerId })
     });
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
 
@@ -349,7 +367,6 @@ async function addToCartAndCheckout(stickerId, stickerName) {
       return;
     }
 
-    // Successful add → redirect to checkout
     window.location.href = "checkout.html";
 
   } catch (error) {

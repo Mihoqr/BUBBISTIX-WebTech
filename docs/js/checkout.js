@@ -1,3 +1,5 @@
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // API base path for checkout-related backend endpoints
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -18,10 +20,21 @@ async function loadCartItems() {
   const payNowBtn = document.getElementById("payNowBtn");
 
   try {
-    // Retrieve current cart from backend
+    // Attach auth headers, redirect if token is missing
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    // Request current user's cart
     const res = await fetch(`${API_BASE_URL}/carts/getCart`, {
+      headers,
       cache: "no-store"
     });
+
+    // Handle expired or invalid session
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
     const cart = data.cart;
@@ -105,9 +118,21 @@ async function processPayment() {
   payNowBtn.disabled = true;
 
   try {
+    // Attach auth headers, redirect if token is missing
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    // Send order creation request
     const res = await fetch(`${API_BASE_URL}/orders/create`, {
-      method: "POST"
+      method: "POST",
+      headers
     });
+
+    // Handle expired or invalid session
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
 

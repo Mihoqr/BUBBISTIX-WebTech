@@ -1,3 +1,5 @@
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // API base path for cart-related backend endpoints
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -11,10 +13,19 @@ async function renderCart() {
   const checkoutBtn = document.querySelector('.checkout-btn');
 
   try {
-    // Retrieve current cart from backend
+    // Fetch protected cart data and redirect if session is invalid
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(`${API_BASE_URL}/carts/getCart`, {
+      headers,
       cache: "no-store"
     });
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
     const cart = data.cart;
@@ -117,10 +128,22 @@ async function renderCart() {
 // Remove a specific item from the backend cart
 async function removeItem(stickerId) {
   try {
+    // Perform protected cart removal and handle invalid session
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
     const res = await fetch(
       `${API_BASE_URL}/carts/removeFromCart/${stickerId}`,
-      { method: "DELETE" }
+      {
+        method: "DELETE",
+        headers
+      }
     );
+
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
 
@@ -138,5 +161,6 @@ async function removeItem(stickerId) {
   }
 }
 
+window.removeItem = removeItem;
 // Load cart when page finishes loading
 window.onload = renderCart;

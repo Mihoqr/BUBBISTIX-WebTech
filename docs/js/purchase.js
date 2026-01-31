@@ -1,11 +1,22 @@
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+
 // API base path for authenticated backend requests
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
 // Backend host for serving images and downloads
 const BACKEND_HOST = "http://localhost:4000";
 
-// Initialize profile, purchases, avatar, and logout on page load
 document.addEventListener("DOMContentLoaded", () => {
+  // Check auth token before running protected account logic
+  const token = localStorage.getItem("authToken");
+
+  // Redirect unauthenticated users to login
+  if (!token) {
+    window.location.replace("registration.html");
+    return;
+  }
+
+  // Initialize account features for authenticated users only
   loadUserProfile();
   loadPurchasedStickers();
   setupAvatar();
@@ -18,7 +29,22 @@ async function loadUserProfile() {
   const emailEl = document.getElementById("display-email");
 
   try {
-    const res = await fetch(`${API_BASE_URL}/users/getMe`, { cache: "no-store" });
+    // Attach auth headers, redirect if token is missing
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    // Fetch currently authenticated user from backend
+    const res = await fetch(`${API_BASE_URL}/users/getMe`, {
+      headers,
+      cache: "no-store"
+    });
+
+    // Handle expired or invalid session
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
+
     if (!res.ok) return;
 
     const { user } = await res.json();
@@ -36,9 +62,24 @@ async function loadPurchasedStickers() {
   if (!purchaseList) return;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/orders/getMyPurchasedStickers`, {
-      cache: "no-store"
-    });
+    // Attach auth headers, redirect if token is missing
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    // Fetch current user's purchased stickers
+    const res = await fetch(
+      `${API_BASE_URL}/orders/getMyPurchasedStickers`,
+      {
+        headers,
+        cache: "no-store"
+      }
+    );
+
+    // Handle expired or invalid session
+    if (res.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const data = await res.json();
     const stickers = data.stickers || [];
@@ -88,7 +129,7 @@ async function loadPurchasedStickers() {
       const btn = card.querySelector("button");
 
       // Attach download handler with loading effect
-      setupDownloadEffect(btn, sticker._id);
+      setupDownloadEffect(btn, sticker._id, sticker.name);
     });
 
   } catch (err) {
@@ -99,21 +140,46 @@ async function loadPurchasedStickers() {
 }
 
 // Handle secure download with visual loading feedback
-function setupDownloadEffect(button, stickerId) {
+function setupDownloadEffect(button, stickerId, stickerName) {
   button.onclick = () => {
     button.disabled = true;
     button.innerHTML =
       `<span class="spinner-border spinner-border-sm"></span> Saving...`;
 
-    setTimeout(() => {
+    setTimeout(async () => {
       button.innerHTML = `<i class="fas fa-check"></i> Saved!`;
       button.style.backgroundColor = "#5b7c61";
 
-      // Trigger backend-protected download
-      const link = document.createElement("a");
-      link.href = `${API_BASE_URL}/downloads/${stickerId}`;
-      link.click();
+      try {
+        // Attach auth headers or redirect if session is missing
+        const headers = getAuthHeaders();
+        if (!headers) return;
 
+        const res = await fetch(
+          `${API_BASE_URL}/downloads/${stickerId}`,
+          { headers }
+        );
+
+        // Handle expired or invalid session
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
+
+        // Download sticker file
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${stickerName}.zip`;
+        link.click();
+
+      } catch (err) {
+        console.error("Download failed:", err);
+      }
+
+      // Reset button state after feedback
       setTimeout(() => {
         button.disabled = false;
         button.innerHTML = "Download";
@@ -151,7 +217,10 @@ function setupLogout() {
   if (!btn) return;
 
   btn.addEventListener("click", () => {
-    localStorage.clear();
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
     window.location.href = "registration.html";
   });
 }
