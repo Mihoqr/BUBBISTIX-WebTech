@@ -1,0 +1,23 @@
+{
+  "name": "bubbistix",
+  "version": "1.0.0",
+  "description": "Backend for Bubbistix",
+  "license": "ISC",
+  "author": "CJ",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/src/index.js",
+    "dev": "nodemon backend/src/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "nodemon": "^3.1.11",
+    "uuid": "^13.0.0"
+  }
+}
