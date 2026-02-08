@@ -1,85 +1,131 @@
-// 1. PINAKATAAS: Redirect agad kung logged in na
-if (localStorage.getItem('userLoggedIn') === 'true') {
-    window.location.replace('purchase.html');
-}
+document.addEventListener("DOMContentLoaded", () => {
+  // Base API endpoint for auth requests
+  const API_BASE = "http://localhost:4000/api/v1";
 
-// 2. ISANG DOMContentLoaded lang para sa lahat ng UI logic
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- PASSWORD RESET MESSAGE LOGIC ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const message = urlParams.get('message');
-    if (message === 'reset') {
-        const resetEl = document.getElementById('resetMessage');
-        if (resetEl) {
-            resetEl.style.display = 'block';
-            resetEl.setAttribute('role', 'status');
-            resetEl.setAttribute('aria-live', 'polite');
-        }
+  // Login form and optional reset success message
+  const loginForm = document.getElementById("loginForm");
+  const resetMessage = document.getElementById("resetMessage");
+
+  // Check if custom toast UI is available
+  const canToast =
+    !!window.bubbistixUI &&
+    typeof window.bubbistixUI.showToast === "function";
+
+  // Validation helpers and email format check
+  const V = window.bubbistixValidate || {};
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Display password reset confirmation if redirected from reset flow
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("message") === "reset" && resetMessage) {
+    resetMessage.classList.remove("hidden");
+    resetMessage.setAttribute("role", "status");
+    resetMessage.setAttribute("aria-live", "polite");
+
+    // Remove query param to prevent repeat message on refresh
+    window.history.replaceState({}, document.title, "registration.html");
+  }
+
+  // Exit early if login form is not present
+  if (!loginForm) return;
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Input and button references
+    const emailInput = loginForm.querySelector("#email");
+    const passwordInput = loginForm.querySelector("#password");
+    const submitBtn = loginForm.querySelector(".login-btn");
+
+    let valid = true;
+
+    // Validate email format
+    if (!emailInput || !emailRegex.test(emailInput.value.trim())) {
+      valid = false;
+      V.setFieldError?.(emailInput, "Please enter a valid email address.");
+    } else {
+      V.clearFieldError?.(emailInput);
     }
+
+    // Ensure password is provided (strength validated server-side)
+    if (!passwordInput || passwordInput.value.trim() === "") {
+      valid = false;
+      V.setFieldError?.(passwordInput, "Password is required.");
+    } else {
+      V.clearFieldError?.(passwordInput);
+    }
+
+    // Stop submission if validation fails
+    if (!valid) return;
+
+    // Set loading state and disable submit button
+    loginForm.setAttribute("aria-busy", "true");
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      Signing in...
+    `;
+
+    try {
+      // Send login request to backend
+      const response = await fetch(`${API_BASE}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailInput.value.trim(),
+          password: passwordInput.value
+        })
+      });
+
+      const data = await response.json();
+
+      // Handle authentication failure
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid email or password.");
+      }
+
+      // Persist auth token and minimal user info
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userId", data.user.id);
+      localStorage.setItem("userName", data.user.full_name);
+      localStorage.setItem("userEmail", data.user.email);
+
+      // Show success feedback before redirect
+      canToast &&
+        window.bubbistixUI.showToast({
+          title: "Welcome back!",
+          message: "Redirecting to your account...",
+          autohide: true,
+          delay: 1500,
+          position: "center",
+          size: "xl",
+          backdrop: "blur"
+        });
+
+      // Redirect to protected page
+      setTimeout(() => {
+        window.location.href = "purchase.html";
+      }, 1500);
+
+    } catch (error) {
+      console.error("Login error:", error);
+
+      // Show login error feedback
+      canToast &&
+        window.bubbistixUI.showToast({
+          title: "Login failed",
+          message: error.message,
+          autohide: true,
+          delay: 3000,
+          variant: "danger",
+          position: "center"
+        });
+
+    } finally {
+      // Reset UI state after request completes
+      loginForm.removeAttribute("aria-busy");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Sign In";
+    }
+  });
 });
-
-// 3. LOGIN FORM SUBMISSION (Labas ng DOMContentLoaded ay okay lang basta may listener)
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const loginForm = document.querySelector('.login-form');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const form = e.currentTarget;
-        const emailInput = form.querySelector('#email');
-        const passwordInput = form.querySelector('#password');
-        const submitBtn = form.querySelector('.login-btn');
-        const canToast = !!(window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function');
-        const V = window.bubbistixValidate || {};
-
-        let valid = true;
-        
-        // Email Validation
-        if (!emailInput || !(V.isEmail ? V.isEmail(emailInput.value) : emailRegex.test(emailInput.value.trim()))) {
-            valid = false;
-            V.setFieldError ? V.setFieldError(emailInput, 'Please enter a valid email address.') : emailInput?.setAttribute('aria-invalid', 'true');
-        } else {
-            V.clearFieldError ? V.clearFieldError(emailInput) : emailInput.removeAttribute('aria-invalid');
-        }
-
-        // Password Validation
-        if (!passwordInput || !(V.minLength ? V.minLength(passwordInput.value, 6) : passwordInput.value.trim().length >= 6)) {
-            valid = false;
-            V.setFieldError ? V.setFieldError(passwordInput, 'Password must be at least 6 characters.') : passwordInput?.setAttribute('aria-invalid', 'true');
-        } else {
-            V.clearFieldError ? V.clearFieldError(passwordInput) : passwordInput.removeAttribute('aria-invalid');
-        }
-
-        if (!valid) return;
-
-        // UI State: Loading
-        form.setAttribute('aria-busy', 'true');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Signing in...`;
-        }
-
-        if (canToast) {
-            window.bubbistixUI.showToast({
-                title: "You're now signed in",
-                message: 'Redirecting to your account',
-                autohide: true,
-                delay: 1500,
-                position: 'center',
-                size: 'xl',
-                backdrop: 'blur'
-            });
-        }
-
-        // Final Action: Save and Redirect
-        setTimeout(() => {
-            const userNameFromEmail = emailInput.value.split('@')[0];
-            localStorage.setItem('userLoggedIn', 'true');
-            localStorage.setItem('userName', userNameFromEmail);
-            localStorage.setItem('userEmail', emailInput.value);
-            window.location.href = 'purchase.html';
-        }, 1500);
-    });
-}

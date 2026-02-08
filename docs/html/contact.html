@@ -44,7 +44,7 @@
                     <li class="nav-item"><a href="contact.html" class="nav-link active" aria-current="page">Contact</a></li>
                     
                     <li class="nav-item">
-                        <a href="registration.html" class="nav-link" aria-label="Account login or registration">
+                        <a href="purchase.html" class="nav-link" aria-label="Account login or registration">
                             <img src="../images/misc/Account-Icon.png" alt="Account icon" class="nav-icon">
                         </a>
                     </li>
@@ -68,15 +68,33 @@
 <br />send it our way and we’ll get back to you ASAP— promise! 💌
         </p>
       </div>
-     <form>
-    <div class="input-row">
-      <input type="text" placeholder="Name" name="name" />
-      <input type="email" placeholder="Email Address" name="email" required />
-    </div>
-    <textarea placeholder="Comment" name="comment"></textarea>
-    <button type="submit" class="squishy-btn">Send</button>
-    
-  </form>
+        <form id="contactForm">
+          <div class="input-row">
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              required
+              minlength="2"
+            />
+
+            <input
+              type="email"
+              placeholder="Email Address"
+              name="email"
+              required
+            />
+          </div>
+
+          <textarea
+            placeholder="Comment"
+            name="comment"
+            required
+            minlength="5"
+          ></textarea>
+
+          <button type="submit" class="squishy-btn">Send</button>
+        </form>
       </div>
     </div>
   </section>
