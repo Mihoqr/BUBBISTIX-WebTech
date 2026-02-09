@@ -987,26 +987,7 @@ button:hover {
     height: fit-content;
 }
 
-.order-special {
-    margin-bottom: 2rem;
-}
-
-.order-special h3 {
-    color: #49705b;
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.order-special textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    resize: vertical;
-    font-family: 'Poppins', sans-serif;
-}
+/* removed order-special*/
 
 .estimated-total {
     border-top: none;
