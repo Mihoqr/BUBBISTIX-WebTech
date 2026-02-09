@@ -1,4 +1,28 @@
-import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+// Build auth headers using stored JWT and redirect if missing
+function getAuthHeaders() {
+  const token = localStorage.getItem("authToken");
+
+  // Redirect to login if user is not authenticated
+  if (!token) {
+    return null;
+  }
+
+  // Attach Bearer token for protected API requests
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
+  };
+}
+
+// Clear auth state and redirect on unauthorized access
+function handleUnauthorized() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userLoggedIn");
+  localStorage.removeItem("userId");
+
+  // Force re-login
+  window.location.href = "registration.html";
+}
 
 // API base path for cart-related backend endpoints
 const API_BASE_URL = "http://localhost:4000/api/v1";
@@ -15,7 +39,28 @@ async function renderCart() {
   try {
     // Fetch protected cart data and redirect if session is invalid
     const headers = getAuthHeaders();
-    if (!headers) return;
+    if (!headers) {
+      // Show demo mode empty cart if not authenticated
+      cartItemsContainer.innerHTML = `
+        <p class="empty-cart" role="alert" aria-live="assertive">
+          Your cart is currently empty. Click "Continue shopping" to add items.
+        </p>
+      `;
+
+      totalEl.textContent = '₱ 0.00 PHP';
+
+      if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = 'Cart is Empty';
+        checkoutBtn.style.backgroundColor = '#ccc';
+        checkoutBtn.style.cursor = 'not-allowed';
+        checkoutBtn.style.opacity = '0.5';
+        checkoutBtn.style.color = '#666';
+        checkoutBtn.style.border = '1px solid #999';
+        checkoutBtn.style.boxShadow = 'none';
+      }
+      return;
+    }
 
     const res = await fetch(`${API_BASE_URL}/carts/getCart`, {
       headers,
@@ -121,7 +166,32 @@ async function renderCart() {
 
   } catch (err) {
     console.error("Render cart failed:", err);
-    cartItemsContainer.innerHTML = "<p>Error loading cart.</p>";
+    
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalEl = document.querySelector('.final-total');
+    const checkoutBtn = document.querySelector('.checkout-btn');
+    
+    // Display fallback empty cart if API is unavailable
+    cartItemsContainer.innerHTML = `
+      <p class="empty-cart" role="alert" aria-live="assertive">
+        Your cart is currently empty. Click "Continue shopping" to add items.
+      </p>
+      <p style="font-size: 0.9rem; color: #999; margin-top: 1rem;">
+        (Backend connection unavailable - demo mode)
+      </p>
+    `;
+
+    totalEl.textContent = '₱ 0.00 PHP';
+
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Cart is Empty';
+      checkoutBtn.style.backgroundColor = '#ccc';
+      checkoutBtn.style.cursor = 'not-allowed';
+      checkoutBtn.style.opacity = '0.5';
+      checkoutBtn.style.color = '#666';
+      checkoutBtn.style.border = '1px solid #999';
+    }
   }
 }
 
@@ -130,7 +200,10 @@ async function removeItem(stickerId) {
   try {
     // Perform protected cart removal and handle invalid session
     const headers = getAuthHeaders();
-    if (!headers) return;
+    if (!headers) {
+      alert("Please login to manage your cart");
+      return;
+    }
 
     const res = await fetch(
       `${API_BASE_URL}/carts/removeFromCart/${stickerId}`,

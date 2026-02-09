@@ -1,4 +1,28 @@
-import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+// Build auth headers using stored JWT and redirect if missing
+function getAuthHeaders() {
+  const token = localStorage.getItem("authToken");
+
+  // Redirect to login if user is not authenticated
+  if (!token) {
+    return null;
+  }
+
+  // Attach Bearer token for protected API requests
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
+  };
+}
+
+// Clear auth state and redirect on unauthorized access
+function handleUnauthorized() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userLoggedIn");
+  localStorage.removeItem("userId");
+
+  // Force re-login
+  window.location.href = "registration.html";
+}
 
 // API base path for authenticated backend requests
 const API_BASE_URL = "http://localhost:4000/api/v1";
@@ -10,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check auth token before running protected account logic
   const token = localStorage.getItem("authToken");
 
-  // Redirect unauthenticated users to login
+  // Show demo content if not authenticated
   if (!token) {
-    window.location.replace("registration.html");
+    showDemoMode();
     return;
   }
 
@@ -23,6 +47,27 @@ document.addEventListener("DOMContentLoaded", () => {
   setupLogout();
 });
 
+// Show demo content for unauthenticated users
+function showDemoMode() {
+  const nameEl = document.getElementById("display-name");
+  const emailEl = document.getElementById("display-email");
+  const purchaseList = document.getElementById("purchase-list");
+  
+  if (nameEl) nameEl.textContent = "Guest User";
+  if (emailEl) emailEl.textContent = "Log in to see your account";
+  
+  if (purchaseList) {
+    purchaseList.innerHTML = `
+      <div style="text-align: center; padding: 2rem; background: #f8f8f8; border-radius: 10px;">
+        <p style="color: #666; margin-bottom: 1rem;">Please log in to view your digital stickers.</p>
+        <a href="registration.html" style="display: inline-block; padding: 0.8rem 1.5rem; background: #49705b; color: white; text-decoration: none; border-radius: 8px;">
+          Login or Register
+        </a>
+      </div>
+    `;
+  }
+}
+
 // Fetch and display logged-in user profile details
 async function loadUserProfile() {
   const nameEl = document.getElementById("display-name");
@@ -31,7 +76,10 @@ async function loadUserProfile() {
   try {
     // Attach auth headers, redirect if token is missing
     const headers = getAuthHeaders();
-    if (!headers) return;
+    if (!headers) {
+      showDemoMode();
+      return;
+    }
 
     // Fetch currently authenticated user from backend
     const res = await fetch(`${API_BASE_URL}/users/getMe`, {
@@ -45,7 +93,10 @@ async function loadUserProfile() {
       return;
     }
 
-    if (!res.ok) return;
+    if (!res.ok) {
+      console.warn("Failed to fetch user profile, using demo data");
+      return;
+    }
 
     const { user } = await res.json();
     if (nameEl) nameEl.textContent = user.username;
@@ -53,6 +104,7 @@ async function loadUserProfile() {
 
   } catch (err) {
     console.error("Failed to load user profile:", err);
+    // Page will still display with default names
   }
 }
 
@@ -134,8 +186,12 @@ async function loadPurchasedStickers() {
 
   } catch (err) {
     console.error("Failed to load purchases:", err);
-    purchaseList.innerHTML =
-      `<p class="text-danger">Failed to load purchases</p>`;
+    purchaseList.innerHTML = `
+      <div style="padding: 2rem; background: #f8f8f8; border-radius: 10px; text-align: center;">
+        <p style="color: #666; margin-bottom: 1rem;">Unable to load your digital stickers at this moment.</p>
+        <p style="font-size: 0.9rem; color: #999;">Please try again later or contact support if the problem persists.</p>
+      </div>
+    `;
   }
 }
 

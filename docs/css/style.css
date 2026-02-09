@@ -52,6 +52,9 @@ body {
     background: white;
     color: #333;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 h1 {
@@ -75,6 +78,15 @@ h2, h3 {
 .about, .team, .footer-container, .shop-header {
     padding-left: 2rem;
     padding-right: 2rem;
+}
+
+main, section {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .hidden {
@@ -342,6 +354,8 @@ header {
     background: var(--primary-pink);
     text-align: center;
     color: white;
+    padding: 3rem 2rem;
+    margin: 0;
 }
 
 .team-header , .promo-header {
@@ -349,28 +363,32 @@ header {
     font-size: clamp(2rem, 5vw, 3rem);
     color: var(--powder-pink);
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    margin-top: 0;
     text-transform: uppercase;
     letter-spacing: 2px;
-    white-space: nowrap;
+    white-space: normal;
     display: block; 
     width: 100%;
 }
 
 .team-subtitle , .promo-subtitle {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
     color: var(--powder-pink);
     letter-spacing: 2px;
     white-space: normal;
     text-align: center;
+    margin: 0 0 1rem 0;
+    padding: 0;
 }
 
 .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(13.75rem, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .team-member img {
@@ -379,6 +397,7 @@ header {
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 .team-member h3 {
     font-family: 'Cute-Sunrise', sans-serif;
@@ -396,6 +415,9 @@ header {
 
 .team-member p {
     font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
 }
 
 /* PROMO SECTION */
@@ -428,11 +450,13 @@ header {
 /* CONTACT SECTION */
 
 .contact {
-    max-width: 600px;
+    max-width: 900px;
     margin: 3rem auto;
+    padding: 2rem;
     text-align: center;
     color: var(--leafy-green);
     font-family: 'Outfit', sans-serif;
+    min-height: calc(100vh - 400px);
 }
 
 .contact h2 {
@@ -454,31 +478,42 @@ header {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .input-row {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .input-row input {
     flex: 1;
-    padding: 0.5rem 1rem;
+    min-width: 150px;
+    padding: 0.75rem 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
     font-family: 'Poppins', sans-serif;
 }
 
+@media (max-width: 480px) {
+    .input-row input {
+        flex: 1 1 100%;
+    }
+}
+
 textarea {
     width: 100%;
-    min-height: 100px;
-    padding: 0.5rem 1rem;
+    min-height: 120px;
+    padding: 0.75rem 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     resize: vertical;
+    box-sizing: border-box;
 }
 
 button {
@@ -985,21 +1020,60 @@ button:hover {
     padding: 2rem;
     border-radius: 15px;
     height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+@media (max-width: 768px) {
+    .cart-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .cart-summary {
+        position: static;
+        top: auto;
+        height: auto;
+    }
+
+    .cart-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        text-align: left;
+    }
+
+    .cart-item-header {
+        display: none;
+    }
+
+    .item-info {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+    }
+
+    .quantity-controls {
+        justify-content: flex-start;
+    }
+
+    .item-total {
+        text-align: left;
+    }
 }
 
 /* removed order-special*/
 
 .estimated-total {
-    border-top: none;
-    padding-top: 0;
+    border: 2px solid #f0f0f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .estimated-total h3 {
     color: #49705b;
     font-family: 'Poppins', sans-serif;
-    margin-bottom: 0.5rem;
+    margin: 0 0 1rem 0;
     font-size: 1.1rem;
-    border-top: none;
 }
 
 .final-total {
@@ -1410,7 +1484,6 @@ button:hover {
     font-weight: bold;
     font-size: 1.2rem;
     color: #49705b;
-    border-top: 1px solid rgba(245, 128, 146, 0.3);
     padding-top: 10px;
     margin-top: 10px;
 }
@@ -1450,41 +1523,86 @@ button:hover {
 .items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 4rem;
     text-align: center;
-    align-items: stretch; /* 1. Ensures all grid items stretch to the full height of the tallest row item. */
-    align-content: start; /* 2. Pushes the grid rows to the top of the container. */
+    align-items: stretch;
+    align-content: start;
+    padding: 0 10px;
+}
+
+@media (max-width: 1200px) {
+    .items {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 2rem;
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .items {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 2rem;
+        padding: 0;
+    }
 }
 
 .items > .item {
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.items > .item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .items > .item p {
-    margin-top: auto; 
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .item img {
     width: 100%;
-    max-width: 100%; 
-    height: auto;
-    border-radius: 8px;
+    max-width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
 }
 
 .item_name {
     font-weight: bold;
-    font-size: large;
+    font-size: 1.1rem;
     color: var(--primary-pink);
+    margin: 8px 0 6px 0;
+    line-height: 1.4;
+    flex-grow: 1;
 }
 
 .item_price {
     font-weight: bold;
+    font-size: 1rem;
     color: var(--leafy-green);
-    margin-top: 5px;
-    margin-bottom: 1rem;
+    margin: 6px 0 12px 0;
+    line-height: 1.3;
+    flex-grow: 1;
 }
 
 /* SHOP PAGE STYLING */
@@ -1492,6 +1610,7 @@ button:hover {
 .shop-wrapper {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .sidebar {
@@ -1505,6 +1624,7 @@ button:hover {
     border-right: 1px solid #ddd;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
 }
 
 .shopsidebar-label {
@@ -1548,6 +1668,7 @@ button:hover {
     flex: 1;
     padding: 20px;
     margin-top: 15px;
+    min-width: 280px;
 }
 
 .shop-toolbar {
@@ -1560,6 +1681,42 @@ button:hover {
 .shop-toolbar select {
     padding: 8px;
     font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .shop-wrapper {
+        gap: 15px;
+    }
+
+    .shop-content {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .shop-wrapper {
+        gap: 0;
+    }
+
+    .shop-content {
+        padding: 10px;
+        margin-top: 0;
+        flex: 1 1 100%;
+    }
+
+    .shop-toolbar {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .shop-toolbar input,
+    .shop-toolbar select {
+        width: 100%;
+    }
 }
 
 .input {
@@ -1619,17 +1776,21 @@ button:hover {
     background-color: var(--leafy-green);
     font-family: 'Poppins', sans-serif;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 16px;
     border: none;
     cursor: pointer;
     text-align: center; 
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
-    display: inline-block;
+    display: block;
+    width: 100%;
     line-height: 1.4;
     border-radius: 5px;
-    width: auto;
+    margin-top: auto;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .product-btn:hover {
@@ -1740,13 +1901,17 @@ footer {
     color: white;
     padding: 2rem 1rem; 
     font-size: 0.9rem;
+    width: 100%;
 }
 
 .footer-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
     text-align: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .footer-subscribe p {
@@ -2111,13 +2276,8 @@ body.sticker-product-page::before {
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 991.98px) {
-    
-    .items {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-    }
     .shop-content {
-        padding: 20px; /* Adjust padding if needed */
+        padding: 20px;
     }
 
     /* Hamburger to X Animation - Targeting the label inside the wrapper */
@@ -2237,13 +2397,49 @@ body.sticker-product-page::before {
     }
 
     .team {
-        padding-top: 2.5rem;       
-        padding-bottom: 2.5rem; 
-        margin-bottom: 0; 
+        padding: 2rem 1rem;
+        margin: 0; 
     }
 
-    .team-header, .team-member h3, .team-subtitle h2 {
-        text-align: center !important; 
+    .team-header {
+        font-size: 1.8rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .team-subtitle {
+        font-size: 1.2rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .team-member h3 {
+        font-size: 1.1rem !important;
+    }
+
+    .team-member p {
+        font-size: 0.85rem !important;
+    }
+
+    .contact {
+        padding: 1.5rem 1rem;
+        margin: 2rem 1rem;
+        max-width: 100%;
+    }
+
+    .contact h2 {
+        font-size: 2rem !important;
+    }
+
+    .contact p {
+        font-size: 0.95rem !important;
+    }
+
+    .input-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .input-row input {
+        width: 100%;
     }
 
     .cart-content {
@@ -2265,21 +2461,50 @@ body.sticker-product-page::before {
         justify-content: center;
     }
 
+    .cart-main {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .cart-container {
+        padding: 1rem;
+    }
+
+    .cart-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .estimated-total {
+        margin-top: 1rem;
+    }
+
     .checkout-container {
         grid-template-columns: 1fr;
         gap: 20px;
+        padding: 0 1rem;
     }
     
     .location-dropdowns {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
     
-    .name-fields, .postal-city-fields {
+    .name-fields {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .postal-city-fields {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
     
     .checkout-right {
         position: static;
+        max-height: none;
+        top: auto;
     }
 
     .checkout-content {
@@ -3287,6 +3512,23 @@ body.sticker-product-page::before {
     text-align: center;
     position: sticky;
     top: 40px;
+    height: fit-content;
+}
+
+@media (max-width: 991.98px) {
+    .account-sidebar-card {
+        padding: 30px 20px;
+        position: static;
+        top: auto;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .account-sidebar-card {
+        padding: 20px;
+        margin-bottom: 1.5rem;
+    }
 }
 
 .account-label {
@@ -3331,8 +3573,33 @@ body.sticker-product-page::before {
 .user-name-text { font-family: 'Cute-Sunrise' !important; font-size: 2.5rem !important; margin-bottom: 0; }
 .user-email-text { font-family: 'Poppins'; font-size: 0.9rem; color: #888; }
 
-.purchase-title { font-family: 'Sugar-Flare' !important; color: var(--leafy-green) !important; text-align: left; }
-.purchase-subtitle { font-family: 'Outfit'; color: var(--leafy-green); font-weight: 500; }
+.purchase-title { 
+    font-family: 'Sugar-Flare' !important; 
+    color: var(--leafy-green) !important; 
+    text-align: left;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    margin: 0 0 1rem 0;
+}
+
+.purchase-subtitle { 
+    font-family: 'Outfit'; 
+    color: var(--leafy-green); 
+    font-weight: 500;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    margin: 0;
+}
+
+@media (max-width: 480px) {
+    .purchase-title {
+        font-size: 1.6rem !important;
+        text-align: center;
+    }
+
+    .purchase-subtitle {
+        font-size: 1rem !important;
+        text-align: center;
+    }
+}
 
 .avatar-modal-content {
     border-radius: 30px;
@@ -3450,5 +3717,82 @@ body.sticker-product-page::before {
 .download-btn-ready:hover {
     background: var(--primary-pink) !important;
     transform: scale(1.02);
+}
+
+/* Responsive adjustments for sticker cards */
+@media (max-width: 768px) {
+    .sticker-purchase-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .sticker-details-left {
+        width: 100%;
+    }
+
+    .sticker-actions-right {
+        width: 100%;
+        flex-basis: auto;
+        min-width: auto;
+        align-items: stretch;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-badge-custom {
+        order: 1;
+    }
+
+    .download-btn-locked,
+    .download-btn-ready {
+        width: auto;
+        flex: 1;
+        order: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .sticker-purchase-card {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .sticker-icon-bg {
+        margin-right: 12px;
+    }
+
+    .sticker-icon-bg img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sticker-actions-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .status-badge-custom {
+        text-align: center;
+        width: 100%;
+        order: 1;
+    }
+
+    .download-btn-locked,
+    .download-btn-ready {
+        width: 100%;
+        order: 2;
+    }
+
+    .sticker-text h4 {
+        font-size: 1rem;
+    }
+
+    .sticker-text small {
+        font-size: 0.75rem;
+    }
 }
 
