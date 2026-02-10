@@ -6,6 +6,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const resetMessage = document.getElementById("resetMessage");
 
+  // --- PASSWORD TOGGLE LOGIC START ---
+  const togglePassword = document.querySelector('#togglePassword');
+  const passwordInput = document.querySelector('#password');
+
+  if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', function () {
+      // I-toggle ang type attribute (password <-> text)
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // I-toggle ang icon class (eye <-> eye-slash)
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  }
+  // --- PASSWORD TOGGLE LOGIC END ---
+
   // Check if custom toast UI is available
   const canToast =
     !!window.bubbistixUI &&
@@ -34,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Input and button references
     const emailInput = loginForm.querySelector("#email");
-    const passwordInput = loginForm.querySelector("#password");
+    const passwordInputRef = loginForm.querySelector("#password"); // Renamed to avoid conflict
     const submitBtn = loginForm.querySelector(".login-btn");
 
     let valid = true;
@@ -48,11 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Ensure password is provided (strength validated server-side)
-    if (!passwordInput || passwordInput.value.trim() === "") {
+    if (!passwordInputRef || passwordInputRef.value.trim() === "") {
       valid = false;
-      V.setFieldError?.(passwordInput, "Password is required.");
+      V.setFieldError?.(passwordInputRef, "Password is required.");
     } else {
-      V.clearFieldError?.(passwordInput);
+      V.clearFieldError?.(passwordInputRef);
     }
 
     // Stop submission if validation fails
@@ -73,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: emailInput.value.trim(),
-          password: passwordInput.value
+          password: passwordInputRef.value
         })
       });
 
@@ -84,10 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(data.message || "Invalid email or password.");
       }
 
-      // Persist auth token and minimal user info
+      // Persist auth token and session flags for purchase.js logic
       localStorage.setItem("authToken", data.token);
-      localStorage.setItem("userId", data.user.id);
-      localStorage.setItem("userName", data.user.full_name);
+      localStorage.setItem("userLoggedIn", "true");
+      localStorage.setItem("userId", data.user.id || data.user._id);
+      localStorage.setItem("userName", data.user.username || data.user.full_name);
       localStorage.setItem("userEmail", data.user.email);
 
       // Show success feedback before redirect

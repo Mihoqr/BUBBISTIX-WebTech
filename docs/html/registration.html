@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bubbistix | Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
   <link rel="stylesheet" href="../css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,23 +15,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../images/fav_smile.png">
   <script type="module" src="../js/registration.js" defer></script>
-<head>
-
 </head>
 <body>
-<!-- HEADER AND NAVIGATION BAR -->
 <header>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            
             <input id="nav-toggle" type="checkbox" aria-label="Toggle navigation menu"> 
-            
             <div class="logo-and-toggler-wrapper d-flex justify-content-between align-items-center w-100 p-2 p-lg-0">
-                
                 <a class="navbar-brand" href="../../index.html">
                     <img src="../images/logo/image.png" alt="BUBBiSTiX logo" class="logo">
                 </a>
-                
                 <div class="pure-css-hamburger d-lg-none">
                     <label for="nav-toggle" class="hamburger" role="button">
                         <div class="top-bun"></div>
@@ -37,7 +33,6 @@
                     </label>
                 </div>
             </div> 
-            
             <div class="collapse navbar-collapse justify-content-lg-center" id="navbarNav">
                 <ul class="navbar-nav nav-links mb-2 mb-lg-0">
                     <li class="nav-item"><a href="../../index.html" class="nav-link">Home</a></li>
@@ -45,7 +40,6 @@
                     <li class="nav-item"><a href="shop.html" class="nav-link">Stickers</a></li>
                     <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
                     <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                    
                     <li class="nav-item">
                         <a href="registration.html" class="nav-link active" aria-current="page" aria-label="Account login or registration">
                             <img src="../images/misc/Account-Icon.png" alt="Account icon" class="nav-icon">
@@ -61,12 +55,11 @@
         </div>
     </nav>
 </header>
-<!-- Registration Page -->
+
 <main class="registration-main">
   <div class="login-container">
     <h1 class="login-title">Log In</h1>
     
-    <!-- Success Message for Password Reset -->
     <div id="resetMessage" class="reset-success-message hidden">
       <p>We've sent you an email with a link to update your password.</p>
     </div>
@@ -78,6 +71,7 @@
       
       <div class="input-group">
         <input type="password" id="password" name="password" placeholder="Password" required>
+        <i class="fa-solid fa-eye" id="togglePassword"></i>
       </div>
       
       <div class="forgot-password">
@@ -91,18 +85,10 @@
       </div>
     </form>
   </div>
-
-  
 </main>
 
-<!-- Footer -->
 <footer>
   <div class="footer-container">
-
-    <!-- Mailing List -->
-    <!-- Mailing List Removed -->
-
-    <!-- Footer Navigation -->
     <div class="footer-nav">
       <ul>
         <li><a href="../../index.html">Home</a></li>
@@ -112,19 +98,14 @@
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </div>
-
-    <!-- Copyright -->
     <div class="footer-copy">
       <p>Copyright © Bubbistix 2025</p>
     </div>
-
   </div>
 </footer>
+
 <script src="../js/validation.js"></script>
-<!-- Bootstrap 5.3.8 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<!-- Reusable Bootstrap UI helpers -->
 <script src="../js/ui_bootstrap.js"></script>
 </body>
-
 </html>
