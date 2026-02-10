@@ -560,6 +560,8 @@ button:hover {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .faq-question {
@@ -573,6 +575,7 @@ button:hover {
     color: var(--leafy-green);
     font-weight: 600;
     font-size: 1.1rem;
+    min-height: 60px; 
 }
 
 .faq-question:hover {
@@ -583,15 +586,18 @@ button:hover {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--leafy-green);
-    transition: transform 0.3s;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .faq-answer {
-    padding: 1.5rem;
+    max-height: 0;
+    padding: 0 1.5rem; 
     background-color: white;
     color: #333;
     line-height: 1.6;
-    display: none;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
 }
 
 .faq-answer h4 {
@@ -602,20 +608,21 @@ button:hover {
 
 .faq-answer p {
     margin-bottom: 1rem;
+    padding-top: 1rem; /* Dito natin ilalagay ang spacing para hindi tumalon ang transition */
 }
 
 .faq-answer p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 1.5rem;
 }
 
 .faq-item.active .faq-answer {
-    display: block;
+    max-height: 300px; /* Mas mababa para mas sumabay ang bilis ng transition sa content */
+    opacity: 1;
 }
 
 .faq-item.active .faq-toggle {
     transform: rotate(45deg);
 }
-
 /* REGISTRATION/LOGIN PAGE */
 
 .registration-main {
@@ -663,23 +670,43 @@ button:hover {
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 1.2rem; /* Tumaas ng kaunti para hindi dikit-dikit ang inputs */
 }
 
+/* --- ITO ANG PINAKA-IMPORTANTENG PART PARA SA MATA --- */
 .input-group {
     position: relative;
+    display: flex;
+    width: 100%;
 }
 
 .input-group input {
     width: 100%;
     padding: 1rem;
+    padding-right: 45px; /* Para may space ang text at hindi mabangga ang mata */
     border: 2px solid #49705B;
     border-radius: 8px;
     font-size: 1rem;
     background: white;
     color: #333;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.input-group i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%); /* Nilalagay nito ang mata sa gitna (vertical center) */
+    cursor: pointer;
+    color: #49705B;
+    font-size: 1.1rem;
+    z-index: 10;
+    transition: color 0.3s ease;
+}
+
+.input-group i:hover {
+    color: #E6536D; /* Magpapalit ng kulay pag tinapatan ang mata */
 }
 
 .input-group input:focus {
@@ -690,51 +717,53 @@ button:hover {
     color: #999;
 }
 
+/* --- LINKS AND BUTTONS --- */
 .forgot-password {
     text-align: left;
     margin-top: -0.5rem;
 }
 
-.forgot-link {
+.forgot-link, .create-link {
     color: #666;
     font-size: .85rem;
     text-decoration: underline;
 }
 
-.forgot-link:hover {
+.forgot-link:hover, .create-link:hover {
     color: #49705b;
 }
 
 .login-btn {
-    background-color: #49705B;
+    background-color: #49705B !important;
     font-family: 'Poppins', sans-serif;
-    color: white;
-    padding: 0.7rem;
+    color: white !important;
+    padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 10px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease !important;
     margin-top: 1rem;
-    width: 60%;
+    width: 60%; 
+    text-align: center;
+    align-self: center; /* Igitna ang button sa flex container */
 }
 
 .login-btn:hover {
-    background-color: #3a5a47;
-    transform: translateY(-2px);
+    background-color: #3a5a47 !important;
+    transform: translateY(-3px) !important; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+    color: white !important;
 }
 
-.create-link {
-    color: #666;
-    font-size: .85rem;
-    text-decoration: underline;
+.login-btn:active {
+    transform: translateY(-1px) !important;
 }
 
-.create-link:hover {
-    color: #49705b;
+.create-account {
+    margin-top: 1rem;
 }
-
 /* Success Popup Styles */
 .success-popup {
     position: fixed;

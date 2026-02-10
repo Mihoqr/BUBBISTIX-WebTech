@@ -52,15 +52,20 @@ function showDemoMode() {
   const nameEl = document.getElementById("display-name");
   const emailEl = document.getElementById("display-email");
   const purchaseList = document.getElementById("purchase-list");
+  const logoutBtn = document.getElementById("logout-btn");
   
   if (nameEl) nameEl.textContent = "Guest User";
   if (emailEl) emailEl.textContent = "Log in to see your account";
+
+  if (logoutBtn) logoutBtn.style.display = "none";
   
   if (purchaseList) {
     purchaseList.innerHTML = `
-      <div style="text-align: center; padding: 2rem; background: #f8f8f8; border-radius: 10px;">
-        <p style="color: #666; margin-bottom: 1rem;">Please log in to view your digital stickers.</p>
-        <a href="registration.html" style="display: inline-block; padding: 0.8rem 1.5rem; background: #49705b; color: white; text-decoration: none; border-radius: 8px;">
+      <div class="empty-state-card" style="text-align: center; padding: 3rem 2rem; background: white; border-radius: 15px; border: 2px dashed #e0e0e0;">
+        <p style="color: #666; font-family: 'Poppins', sans-serif; margin-bottom: 1.5rem;">
+          Please log in to view your digital stickers.
+        </p>
+        <a href="registration.html" class="login-btn" style="text-decoration: none; display: inline-block;">
           Login or Register
         </a>
       </div>
@@ -72,6 +77,7 @@ function showDemoMode() {
 async function loadUserProfile() {
   const nameEl = document.getElementById("display-name");
   const emailEl = document.getElementById("display-email");
+  const logoutBtn = document.getElementById("logout-btn");
 
   try {
     // Attach auth headers, redirect if token is missing
@@ -101,6 +107,9 @@ async function loadUserProfile() {
     const { user } = await res.json();
     if (nameEl) nameEl.textContent = user.username;
     if (emailEl) emailEl.textContent = user.email;
+
+    // Show logout button for authenticated users
+    if (logoutBtn) logoutBtn.style.display = "block";
 
   } catch (err) {
     console.error("Failed to load user profile:", err);
