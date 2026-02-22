@@ -1,3 +1,30 @@
+.or-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0.2rem auto 0.2rem auto;
+    color: #b0b0b0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+.or-divider span {
+    padding: 0 1rem;
+    color: #b0b0b0;
+    background: #fff;
+    z-index: 1;
+}
+.or-divider:before,
+.or-divider:after {
+    content: '';
+    flex: 1;
+    border-bottom: 1.5px solid #e0e0e0;
+    margin: 0 0.5rem;
+    z-index: 0;
+}
 /* GLOBAL STYLES */
 
 * {
@@ -745,7 +772,10 @@ button:hover {
     cursor: pointer;
     transition: all 0.3s ease !important;
     margin-top: 1rem;
-    width: 60%; 
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     align-self: center; /* Igitna ang button sa flex container */
 }
@@ -759,6 +789,41 @@ button:hover {
 
 .login-btn:active {
     transform: translateY(-1px) !important;
+}
+
+/* Google button style */
+.google-btn {
+    background: #fff !important;
+    color: #49705b !important;
+    border: 2px solid #49705b !important;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    box-sizing: border-box;
+    margin-top: 0.75rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    margin-left: auto;
+    margin-right: auto;
+}
+.google-btn:hover {
+    border-color: #355143 !important;
+    box-shadow: 0 2px 8px rgba(73,112,91,0.10);
+}
+.google-btn img {
+    height: 22px;
+    width: 22px;
+    margin-right: 0.5rem;
 }
 
 .create-account {

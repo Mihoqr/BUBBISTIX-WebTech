@@ -59,31 +59,31 @@
 <main class="registration-main">
   <div class="login-container">
     <h1 class="login-title">Log In</h1>
-    
     <div id="resetMessage" class="reset-success-message hidden">
       <p>We've sent you an email with a link to update your password.</p>
     </div>
-    
     <form class="login-form" id="loginForm" novalidate>
       <div class="input-group">
         <input type="email" id="email" name="email" placeholder="Email" required>
       </div>
-      
       <div class="input-group">
         <input type="password" id="password" name="password" placeholder="Password" required>
         <i class="fa-solid fa-eye" id="togglePassword"></i>
       </div>
-      
-      <div class="forgot-password">
+      <div class="forgot-password d-flex justify-content-end align-items-center" style="margin-bottom: 0.5rem;">
         <a href="../html/reset-password.html" class="forgot-link">Forgot your password?</a>
       </div>
-      
-      <button type="submit" class="login-btn">Sign In</button>
-      
-      <div class="create-account">
-        <a href="../html/create-account.html" class="create-link">Create an account</a>
+      <button type="submit" class="login-btn" style="margin-bottom: 0;">Sign In</button>
+      <div class="or-divider" style="margin: 0; line-height: 1;">
+        <span style="padding: 0 0.12rem;">or</span>
       </div>
+      <a href="#" class="google-btn" style="text-decoration: none; margin-top: 0;"> 
+        <img src="../images/logo/google.png" alt="Google logo">Continue with Google
+      </a>
     </form>
+    <div class="forgot-password text-center mt-3" style="font-size: 0.98rem; color: #888; font-family: 'Poppins', sans-serif; font-weight: 400;">
+      Don't have an account yet? <a href="../html/create-account.html" class="create-link" style="font-family: 'Poppins', sans-serif; font-weight: 700; color: #49705b; text-decoration: none;">Sign Up</a>
+    </div>
   </div>
 </main>
 
