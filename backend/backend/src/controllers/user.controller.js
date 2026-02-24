@@ -1,6 +1,9 @@
+import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcrypt";
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/jwt.js";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const strongPasswordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -104,6 +107,13 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Prevent password login for Google accounts
+    if (user.auth_provider === "GOOGLE") {
+      return res.status(400).json({
+        message: "Please login using Google"
+      });
+    }
+
     // Compare password
     const isPasswordValid = await bcrypt.compare(
       password,
@@ -140,6 +150,99 @@ const loginUser = async (req, res) => {
 
     return res.status(500).json({
       message: "Server error"
+    });
+  }
+};
+
+// Google Sign-In / Sign-Up
+const googleAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({
+        message: "Google credential is required"
+      });
+    }
+
+    // Verify ID token with Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Invalid Google token"
+      });
+    }
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+
+    // Clean Google name into base username (for the default username of Google users)
+    let baseUsername = name
+      .toLowerCase()
+      .replace(/\s+/g, "")           // remove spaces
+      .replace(/[^a-z0-9_]/g, "")    // remove invalid chars
+      .slice(0, 20);                 // enforce max length
+
+    if (!baseUsername) {
+      baseUsername = "user";
+    }
+
+    // Ensure uniqueness
+    let generatedUsername = baseUsername;
+    let counter = 0;
+
+    while (await User.findOne({ username: generatedUsername })) {
+      counter++;
+
+      const suffix = counter.toString();
+
+      // ensure total length <= 20
+      generatedUsername =
+        (baseUsername.slice(0, 20 - suffix.length) + suffix);
+    }
+
+    // If no user exists yet, create new user
+    if (!user) {
+      user = await User.create({
+        username: generatedUsername, // Auto generate a unique username for the Google user
+        full_name: name,
+        email,
+        password_hash: null,
+        auth_provider: "GOOGLE",
+        role: "USER"
+      });
+    }
+
+    // Generate system JWT
+    const token = generateToken({
+      id: user._id,
+      role: user.role
+    });
+
+    return res.status(200).json({
+      message: "Google authentication successful",
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error("Google auth error:", error);
+
+    return res.status(401).json({
+      message: "Google authentication failed"
     });
   }
 };
@@ -223,6 +326,7 @@ const resetPassword = async (req, res) => {
 export {
   registerUser,
   loginUser,
+  googleAuth,
   logoutUser,
   getMe,
   resetPassword

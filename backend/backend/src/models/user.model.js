@@ -60,7 +60,13 @@ const userSchema = new mongoose.Schema(
 
     password_hash: {
       type: String,
-      required: true
+      required: false
+    },
+
+    auth_provider: {
+      type: String,
+      enum: ["LOCAL", "GOOGLE"],
+      default: "LOCAL"
     },
 
     role: {

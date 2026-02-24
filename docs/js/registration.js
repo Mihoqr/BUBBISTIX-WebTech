@@ -147,3 +147,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// Google callback function
+window.handleGoogleCredential = async function (response) {
+  const API_BASE = "http://localhost:4000/api/v1";
+
+  // Uncomment to get Google ID token from the console for Postman testing
+  //console.log("GOOGLE ID TOKEN:", response.credential);
+
+  try {
+    const res = await fetch(`${API_BASE}/users/googleAuth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        credential: response.credential
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Google authentication failed");
+    }
+
+    // Store JWT like normal login
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("userLoggedIn", "true");
+    localStorage.setItem("userId", data.user.id);
+    localStorage.setItem("userName", data.user.username);
+    localStorage.setItem("userEmail", data.user.email);
+
+    window.location.href = "purchase.html";
+
+  } catch (error) {
+    console.error("Google login error:", error);
+    alert(error.message);
+  }
+};

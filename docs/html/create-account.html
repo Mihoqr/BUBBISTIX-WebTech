@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../images/fav_smile.png">
-
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="../js/create_account.js" defer></script>
 
 </head>
@@ -87,9 +87,25 @@
           <div class="or-divider" style="margin: 0.08rem 0; line-height: 1;">
             <span style="padding: 0 0.32rem;">or</span>
           </div>
-          <a href="#" class="google-btn" style="text-decoration: none; margin-top: 0.08rem;"> 
+          <!-- <a href="#" class="google-btn" style="text-decoration: none; margin-top: 0.08rem;"> 
             <img src="../images/logo/google.png" alt="Google logo">Continue with Google
-          </a>
+          </a> -->
+
+          <div id="g_id_onload"
+              data-client_id="1014156299805-lvum203bnbqf5b2l3ekd8res5itn8r6e.apps.googleusercontent.com"
+              data-callback="handleGoogleCredential"
+              data-auto_prompt="false">
+          </div>
+
+          <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="continue_with"
+            data-shape="pill"
+            data-logo_alignment="left">
+        </div>
+
     </form>
   </div>
 
