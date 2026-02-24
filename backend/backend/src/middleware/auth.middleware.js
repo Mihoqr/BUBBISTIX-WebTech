@@ -25,7 +25,7 @@ const authMiddleware = (req, res, next) => {
       role: decoded.role
     };
 
-    // Continue to protected route
+    // Continue
     next();
 
   } catch (error) {
