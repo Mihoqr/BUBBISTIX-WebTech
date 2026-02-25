@@ -67,12 +67,6 @@ function showDemoMode() {
           </p>
           <div style="max-width: 400px; margin: 0 auto;">
             <a href="registration.html" class="login-btn" style="text-decoration: none; width: 100%; margin-bottom: 0.7rem; display: block;">Login or Register</a>
-            <div class="or-divider" style="margin: 0.5rem 0; line-height: 1;">
-              <span style="padding: 0 0.7rem;">or</span>
-            </div>
-            <a href="#" class="google-btn" style="text-decoration: none; width: 100%; margin-top: 0.7rem; display: block;">
-              <img src="../images/logo/google.png" alt="Google logo">Continue with Google
-            </a>
           </div>
         </div>
       `;

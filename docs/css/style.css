@@ -698,7 +698,7 @@ button:hover {
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem; /* Tumaas ng kaunti para hindi dikit-dikit ang inputs */
+    gap: 0.6rem; /* Reduced gap for tighter layout */
 }
 
 /* --- ITO ANG PINAKA-IMPORTANTENG PART PARA SA MATA --- */
