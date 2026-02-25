@@ -1,5 +1,3 @@
-// set_new_password.js
-// Handles new password entry and validation (frontend only)
 document.addEventListener("DOMContentLoaded", () => {
   const setNewPasswordForm = document.getElementById("setNewPasswordForm");
   const canToast =
@@ -29,12 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       return;
     }
-    // Show success (simulate frontend only)
+    // Show success 
     canToast && window.bubbistixUI.showToast({
       title: "Success",
-      message: "Password reset successful! (frontend only)",
+      message: "Password reset successful!",
       variant: "success",
-      position: "center"
+      position: "center",
+      duration: 3000 // 3 seconds
     });
     setNewPasswordForm.reset();
   });
