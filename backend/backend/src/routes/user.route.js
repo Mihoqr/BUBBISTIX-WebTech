@@ -5,7 +5,8 @@ import { registerUser,
          googleAuth,
          logoutUser,
          getMe,
-         resetPassword
+         resetPassword,
+         setNewPassword
  } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -17,5 +18,6 @@ router.post("/googleAuth", googleAuth);
 router.post("/logout", authMiddleware, logoutUser);
 router.get("/getMe", authMiddleware, getMe);
 router.route("/resetPassword").post(resetPassword);
+router.route("/setNewPassword").post(setNewPassword);
 
 export default router;

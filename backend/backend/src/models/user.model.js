@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 // Helper
 const toTitleCase = (value) => {
@@ -73,7 +74,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["USER", "ADMIN"],
       default: "USER"
-    }
+    },
+
+    password_reset_token: String,
+
+    password_reset_expires: Date,
   },
   {
     timestamps: {

@@ -1,40 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const setNewPasswordForm = document.getElementById("setNewPasswordForm");
+  const API_BASE = "http://localhost:4000/api/v1";
+  const form = document.getElementById("setNewPasswordForm");
   const canToast =
     !!window.bubbistixUI && typeof window.bubbistixUI.showToast === "function";
 
-  if (!setNewPasswordForm) return;
+  if (!form) return;
 
-  setNewPasswordForm.addEventListener("submit", function(e) {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+
+  if (!token) {
+    alert("Invalid or expired reset link.");
+    window.location.href = "registration.html";
+    return;
+  }
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const newPassword = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
-    if (!newPassword || !confirmPassword) {
-      canToast && window.bubbistixUI.showToast({
-        title: "Error",
-        message: "Please fill in both password fields.",
-        variant: "danger",
-        position: "center"
-      });
-      return;
-    }
+
     if (newPassword !== confirmPassword) {
-      canToast && window.bubbistixUI.showToast({
-        title: "Error",
-        message: "Passwords do not match.",
-        variant: "danger",
-        position: "center"
-      });
+      alert("Passwords do not match.");
       return;
     }
-    // Show success 
-    canToast && window.bubbistixUI.showToast({
-      title: "Success",
-      message: "Password reset successful!",
-      variant: "success",
-      position: "center",
-      duration: 3000 // 3 seconds
-    });
-    setNewPasswordForm.reset();
+
+    try {
+      const res = await fetch(`${API_BASE}/users/setNewPassword`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          newPassword
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+
+      alert("Password reset successful!");
+      window.location.href = "registration.html";
+
+    } catch (error) {
+      alert(error.message);
+    }
   });
 });

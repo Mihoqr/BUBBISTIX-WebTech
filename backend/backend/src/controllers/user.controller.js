@@ -1,7 +1,9 @@
 import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/jwt.js";
+import { sendResetEmail } from "../utils/email.js";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -291,25 +293,42 @@ const getMe = async (req, res) => {
   }
 };
 
-// Request password reset (mock)
 const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
     // Email is required to request reset
     if (!email) {
-      return res.status(400).json({
-        message: "Email is required"
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    // Always respond success to prevent email enumeration
+    if (!user) {
+      return res.status(200).json({
+        message:
+          "If an account with that email exists, a password reset link has been sent."
       });
     }
 
-    // Check if user exists and never reveal whether the user exists)
-    const user = await User.findOne({ email });
+    // Generate secure token
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
-    // soon: generate token + send email
-    // now: simulate success response
+    // Hash token before saving to DB
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
 
-    // Simulated success response
+    user.password_reset_token = hashedToken;
+    user.password_reset_expires = Date.now() + 15 * 60 * 1000; // 15 mins
+    await user.save();
+
+    const resetLink = `${process.env.FRONTEND_URL}/set-new-password.html?token=${resetToken}`;
+
+    await sendResetEmail(user.email, resetLink);
+
     return res.status(200).json({
       message:
         "If an account with that email exists, a password reset link has been sent."
@@ -317,6 +336,58 @@ const resetPassword = async (req, res) => {
 
   } catch (error) {
     console.error("Reset password error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const setNewPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        message: "Invalid request"
+      });
+    }
+
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!strongPasswordRegex.test(newPassword)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
+      });
+    }
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      password_reset_token: hashedToken,
+      password_reset_expires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Token is invalid or expired"
+      });
+    }
+
+    user.password_hash = await bcrypt.hash(newPassword, 10);
+    user.password_reset_token = undefined;
+    user.password_reset_expires = undefined;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password successfully reset"
+    });
+
+  } catch (error) {
+    console.error("Set new password error:", error);
     return res.status(500).json({
       message: "Server error"
     });
@@ -329,5 +400,6 @@ export {
   googleAuth,
   logoutUser,
   getMe,
-  resetPassword
+  resetPassword,
+  setNewPassword
 };
