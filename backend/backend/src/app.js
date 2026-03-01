@@ -1,6 +1,7 @@
 import cors from "cors";
 import path from "path";
 import express from "express";
+import helmet from "helmet";
 import userRouter from "./routes/user.route.js";
 import categoryRouter from "./routes/category.route.js";
 import stickerRouter from "./routes/sticker.route.js";
@@ -11,7 +12,43 @@ import downloadLogsRouter from "./routes/download_log.route.js";
 
 const app = express();
 
-// CORS
+// Helmet configuration
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "https://accounts.google.com",
+          "https://cdn.jsdelivr.net",
+          "https://cdnjs.cloudflare.com"
+        ],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+          "https://cdn.jsdelivr.net"
+        ],
+        fontSrc: [
+          "'self'",
+          "https://fonts.gstatic.com"
+        ],
+        imgSrc: [
+          "'self'",
+          "data:"
+        ],
+        connectSrc: [
+          "'self'",
+          "http://localhost:4000"
+        ]
+      }
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  })
+);
+
+// CORS (temporary wildcard for development)
 app.use(cors({
   origin: "*"
 }));
