@@ -122,7 +122,7 @@ function renderGallery(filterText = "", sortBy = "") {
       <h2>${name}</h2>
       <div class="items">
         ${items.map(sticker => {
-          const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+          const imageUrl = `${sticker.preview_images[0]}`;
           return `
             <div class="item">
               <a href="shop-preview.html?id=${sticker._id}" style="text-decoration: none; color: inherit;">

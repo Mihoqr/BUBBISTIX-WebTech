@@ -40,7 +40,7 @@ function initPreviewModal() {
     if (!window.currentSticker) return;
 
     images = window.currentSticker.preview_images.map(
-      img => `${BACKEND_HOST}${img}`
+      img => `${img}`
     );
     index = 0;
 
@@ -133,7 +133,7 @@ function renderMainSticker(sticker) {
   const thumbnailContainer = document.querySelector(".thumbnail-container");
 
   const images = sticker.preview_images.map(
-    img => `${BACKEND_HOST}${img}`
+    img => `${img}`
   );
 
   carouselInner.innerHTML = images.map((src, i) => `
@@ -211,7 +211,7 @@ async function renderRelatedStickers(currentSticker) {
     `;
 
     related.forEach(sticker => {
-      const image = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+      const image = `${sticker.preview_images[0]}`;
 
       const col = document.createElement("div");
       col.className = "col-6 col-md-4 col-lg-3 mb-4";

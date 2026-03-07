@@ -155,7 +155,7 @@ async function loadPurchasedStickers() {
     purchaseList.innerHTML = "";
 
     stickers.forEach(sticker => {
-      const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+      const imageUrl = `${sticker.preview_images[0]}`;
 
       // Format purchase date for display
       const purchaseDate = new Date(sticker.purchased_at)
@@ -220,25 +220,21 @@ function setupDownloadEffect(button, stickerId, stickerName) {
         const headers = getAuthHeaders();
         if (!headers) return;
 
+        // Request secure download URL from backend
         const res = await fetch(
           `${API_BASE_URL}/downloads/${stickerId}`,
           { headers }
         );
 
-        // Handle expired or invalid session
-        if (res.status === 401) {
-          handleUnauthorized();
-          return;
+        const data = await res.json();
+
+        // Ensure backend provided a valid download URL
+        if (!data.download_url) {
+          throw new Error("Download URL missing");
         }
 
-        // Download sticker file
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${stickerName}.zip`;
-        link.click();
+        // Redirect browser to signed S3 URL
+        window.location.href = data.download_url;
 
       } catch (err) {
         console.error("Download failed:", err);

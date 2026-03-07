@@ -34,7 +34,7 @@ async function loadCollections() {
 
       if (!previewSticker) continue;
 
-      const imageUrl = `${BACKEND_HOST}${previewSticker.preview_images[0]}`;
+      const imageUrl = `${previewSticker.preview_images[0]}`;
 
       const col = document.createElement("div");
       col.className = "col";

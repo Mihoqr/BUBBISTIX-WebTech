@@ -116,7 +116,7 @@ async function renderCart() {
     // Render each cart item and compute total price
     cart.items.forEach(item => {
       const sticker = item.sticker_id;
-      const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+      const imageUrl = sticker.preview_images[0];
       const itemTotal = item.price_at_add;
       total += itemTotal;
 

@@ -246,7 +246,7 @@ function renderOrderItems(order) {
   // Build UI for each purchased sticker
   order.items.forEach(item => {
     const sticker = item.sticker_id;
-    const imageUrl = `${BACKEND_HOST}${sticker.preview_images[0]}`;
+    const imageUrl = `${sticker.preview_images[0]}`;
     const price = item.price_at_purchase;
 
     itemsHTML += `
