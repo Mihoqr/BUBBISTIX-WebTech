@@ -2,6 +2,7 @@ import { Cart } from "../models/cart.model.js";
 import { Sticker } from "../models/sticker.model.js";
 import { Order } from "../models/order.model.js";
 import { OwnershipToken } from "../models/ownership_token.model.js";
+import { formatStickerImages } from "../utils/formatStickerImages.js";
 
 /**
  * Add a sticker to cart
@@ -105,6 +106,13 @@ const getCart = async (req, res) => {
     if (!cart) {
       cart = await Cart.create({ user_id, items: [] });
     }
+
+    // Format preview image URLs for each sticker in the cart
+    cart.items.forEach(item => {
+      if (item.sticker_id) {
+        item.sticker_id = formatStickerImages(item.sticker_id);
+      }
+    });
 
     return res.status(200).json({ cart });
 

@@ -3,6 +3,7 @@ import { Cart } from "../models/cart.model.js";
 import { Sticker } from "../models/sticker.model.js";
 import { OwnershipToken } from "../models/ownership_token.model.js";
 import { v4 as uuidv4 } from "uuid";
+import { formatStickerImages, formatOrderStickerImages } from "../utils/formatStickerImages.js";
 
 /**
  * Create an order from the user's cart (Checkout)
@@ -112,11 +113,15 @@ const getMyOrders = async (req, res) => {
   try {
     const user_id = req.user.id;
 
+    // Retrieve all orders of the user
     const orders = await Order.find({ user_id })
       .populate("items.sticker_id", "name preview_images")
       .sort({ created_at: -1 });
 
-    return res.status(200).json({ orders });
+    // Format preview images for stickers in each order
+    const formattedOrders = orders.map(formatOrderStickerImages);
+
+    return res.status(200).json({ orders: formattedOrders });
 
   } catch (error) {
     console.error("Get orders error:", error);
@@ -174,10 +179,14 @@ const getMyPurchasedStickers = async (req, res) => {
         const sticker = item.sticker_id;
 
         if (sticker && !stickerMap.has(sticker._id.toString())) {
+
+          // Format preview image URLs
+          const formattedSticker = formatStickerImages(sticker);
+
           stickerMap.set(sticker._id.toString(), {
-            _id: sticker._id,
-            name: sticker.name,
-            preview_images: sticker.preview_images,
+            _id: formattedSticker._id,
+            name: formattedSticker.name,
+            preview_images: formattedSticker.preview_images,
             is_limited: item.is_limited,
             purchased_at: order.created_at
           });

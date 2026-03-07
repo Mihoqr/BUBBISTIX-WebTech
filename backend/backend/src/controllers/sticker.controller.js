@@ -1,59 +1,67 @@
 import { Sticker } from "../models/sticker.model.js";
 import { Category } from "../models/category.model.js";
+import { formatStickerImages } from "../utils/formatStickerImages.js";
 
 /**
  * Create a new sticker (Admin / Backend only)
  */
 const createSticker = async (req, res) => {
   try {
+
     const {
       name,
       description,
       price,
       category_id,
-      preview_images,
-      file_path,
       is_limited
     } = req.body;
 
-    // Basic validation
-    if (
-      !name ||
-      !description ||
-      price === undefined ||
-      !category_id ||
-      !preview_images ||
-      !file_path
-    ) {
+    // Validate required fields
+    if (!name || !description || price === undefined || !category_id) {
       return res.status(400).json({
         message: "All required sticker fields must be provided"
       });
     }
 
-    // Check for existing sticker (business rule)
+    // Validate uploaded files
+    if (!req.files || !req.files.preview_images || !req.files.sticker_zip) {
+      return res.status(400).json({
+        message: "Preview images and sticker zip must be uploaded"
+      });
+    }
+
+    // Extract preview image keys from S3
+    const previewImages = req.files.preview_images.map(file => file.key);
+
+    // Extract sticker zip key from S3
+    const zipFile = req.files.sticker_zip[0].key;
+
+    // Check for existing sticker
     const existingSticker = await Sticker.findOne({ name });
 
     if (existingSticker) {
-        return res.status(409).json({
+      return res.status(409).json({
         message: "Sticker already exists."
-        });
+      });
     }
 
     // Ensure category exists
     const categoryExists = await Category.findById(category_id);
+
     if (!categoryExists) {
       return res.status(400).json({
         message: "Invalid category"
       });
     }
 
+    // Create sticker
     const sticker = await Sticker.create({
       name,
       description,
       price,
       category_id,
-      preview_images,
-      file_path,
+      preview_images: previewImages,
+      sticker_zip: zipFile,
       is_limited: is_limited ?? false
     });
 
@@ -79,23 +87,26 @@ const createSticker = async (req, res) => {
 
 /**
  * Get all stickers (Public)
- * Supports optional category filtering
  */
 const getAllStickers = async (req, res) => {
   try {
     const { category_id } = req.query;
 
+    // Filter stickers by category
     const filter = {};
     if (category_id) {
-      filter.category_id = category_id;
+      filter.category_id = category_id; 
     }
 
     const stickers = await Sticker.find(filter)
       .populate("category_id", "name slug")
       .sort({ created_at: -1 });
 
+    // Format preview images for each sticker
+    const formattedStickers = stickers.map(formatStickerImages);
+
     return res.status(200).json({
-      stickers
+      stickers: formattedStickers
     });
 
   } catch (error) {
@@ -123,8 +134,11 @@ const getStickerById = async (req, res) => {
       });
     }
 
+    // Convert preview images into full S3 URLs
+    const formattedSticker = formatStickerImages(sticker);
+
     return res.status(200).json({
-      sticker
+      sticker: formattedSticker
     });
 
   } catch (error) {
@@ -158,7 +172,7 @@ const updateSticker = async (req, res) => {
       "price",
       "category_id",
       "preview_images",
-      "file_path"
+      "sticker_zip"
     ];
 
     updatableFields.forEach(field => {
@@ -258,13 +272,16 @@ const getStickersByCategory = async (req, res) => {
       .populate("category_id", "name slug")
       .sort({ created_at: -1 });
 
+    // Format preview images for each sticker
+    const formattedStickers = stickers.map(formatStickerImages);
+
     return res.status(200).json({
       category: {
         id: category._id,
         name: category.name,
         slug: category.slug
       },
-      stickers
+      stickers: formattedStickers
     });
 
   } catch (error) {
@@ -298,7 +315,7 @@ const createMultipleStickers = async (req, res) => {
         price,
         category_id,
         preview_images,
-        file_path
+        sticker_zip
       } = sticker;
 
       if (
@@ -307,7 +324,7 @@ const createMultipleStickers = async (req, res) => {
         price === undefined ||
         !category_id ||
         !preview_images ||
-        !file_path
+        !sticker_zip
       ) {
         return res.status(400).json({
           message: "Each sticker must contain all required fields"

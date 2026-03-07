@@ -56,7 +56,7 @@ const stickerSchema = new mongoose.Schema(
       }
     },
 
-    file_path: {
+    sticker_zip: {
       type: String,
       required: true
     },

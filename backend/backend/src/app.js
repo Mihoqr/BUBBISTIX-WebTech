@@ -36,7 +36,8 @@ app.use(
         ],
         imgSrc: [
           "'self'",
-          "data:"
+          "data:",
+          "https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com"
         ],
         connectSrc: [
           "'self'",
@@ -56,10 +57,6 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  "/previews",
-  express.static(path.join(process.cwd(), "backend/private/previews"))
-);
 
 // Routes
 app.use("/api/v1/users", userRouter);
