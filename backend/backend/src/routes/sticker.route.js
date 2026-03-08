@@ -17,17 +17,16 @@ const router = Router();
 router.route("/getAll").get(getAllStickers);
 router.route("/getByID/:id").get(getStickerById);
 router.route("/getByCategory/:category_id").get(getStickersByCategory);
-router.post(
-  "/create",
-  authMiddleware,
-  authorizeRoles("ADMIN"),
-  upload.fields([
+router.post("/create", authMiddleware, authorizeRoles("ADMIN"), upload.fields([
     { name: "preview_images", maxCount: 5 },
     { name: "sticker_zip", maxCount: 1 }
-  ]),
-  createSticker
+  ]), createSticker
 );
-router.put("/update/:id", authMiddleware, authorizeRoles("ADMIN"), updateSticker);
+router.put("/update/:id", authMiddleware, authorizeRoles("ADMIN"), upload.fields([
+    { name: "preview_images", maxCount: 5 },
+    { name: "sticker_zip", maxCount: 1 }
+  ]), updateSticker
+);
 router.delete("/delete/:id", authMiddleware, authorizeRoles("ADMIN"), deleteSticker);
 router.post("/createMultipleStickers", authMiddleware, authorizeRoles("ADMIN"), createMultipleStickers);
 

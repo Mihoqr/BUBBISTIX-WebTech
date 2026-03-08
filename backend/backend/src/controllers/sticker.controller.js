@@ -1,6 +1,8 @@
 import { Sticker } from "../models/sticker.model.js";
 import { Category } from "../models/category.model.js";
 import { formatStickerImages } from "../utils/formatStickerImages.js";
+import s3 from "../config/s3.js";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 /**
  * Create a new sticker (Admin / Backend only)
@@ -191,6 +193,17 @@ const updateSticker = async (req, res) => {
       }
     }
 
+    // Update preview images if uploaded
+    if (req.files?.preview_images) {
+      const previewImages = req.files.preview_images.map(file => file.key);
+      sticker.preview_images = previewImages;
+    }
+
+    // Update sticker zip if uploaded
+    if (req.files?.sticker_zip) {
+      sticker.sticker_zip = req.files.sticker_zip[0].key;
+    }
+
     await sticker.save();
 
     return res.status(200).json({
@@ -227,6 +240,24 @@ const deleteSticker = async (req, res) => {
         message: "Sticker not found"
       });
     }
+
+    // Delete preview images from S3
+    for (const imageKey of sticker.preview_images) {
+      await s3.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: imageKey
+        })
+      );
+    }
+
+    // Delete sticker zip from S3
+    await s3.send(
+      new DeleteObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: sticker.sticker_zip
+      })
+    );
 
     await Sticker.findByIdAndDelete(id);
 

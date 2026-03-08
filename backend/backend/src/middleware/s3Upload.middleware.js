@@ -5,6 +5,7 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 import s3 from "../config/s3.js";
 import { Category } from "../models/category.model.js";
+import { Sticker } from "../models/sticker.model.js";
 
 // Configure multer to upload files directly to AWS S3
 const upload = multer({
@@ -22,7 +23,20 @@ const upload = multer({
     key: async function (req, file, cb) {
       try {
 
-        const { category_id } = req.body;
+        let { category_id } = req.body;
+
+        // If category_id not provided, get it from the existing sticker
+        if (!category_id && req.params?.id) {
+
+          const sticker = await Sticker.findById(req.params.id);
+
+          if (!sticker) {
+            return cb(new Error("Sticker not found"));
+          }
+
+          category_id = sticker.category_id.toString();
+
+        }
 
         // Ensure category_id is provided
         if (!category_id) {
