@@ -27,6 +27,9 @@ function handleUnauthorized() {
 // API base path for authenticated backend requests
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
+// Base URL for accessing AWS bucket
+const S3_BASE_URL = "https://bubbistix-storage.s3.amazonaws.com";
+
 // Backend host for serving images and downloads
 const BACKEND_HOST = "http://localhost:4000";
 
@@ -34,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check auth token before running protected account logic
   const token = localStorage.getItem("authToken");
 
+  setupAvatarEditProtection();
+  
   // Show demo content if not authenticated
   if (!token) {
     showDemoMode();
@@ -53,9 +58,15 @@ function showDemoMode() {
   const emailEl = document.getElementById("display-email");
   const purchaseList = document.getElementById("purchase-list");
   const logoutBtn = document.getElementById("logout-btn");
+  const avatarEl = document.getElementById("display-avatar");
   
   if (nameEl) nameEl.textContent = "Guest User";
   if (emailEl) emailEl.textContent = "Log in to see your account";
+
+  // Default avatar for guests
+  if (avatarEl) {
+    avatarEl.src = `${S3_BASE_URL}/avatars/pink.png`;
+  }
 
   if (logoutBtn) logoutBtn.style.display = "none";
   
@@ -107,6 +118,12 @@ async function loadUserProfile() {
     const { user } = await res.json();
     if (nameEl) nameEl.textContent = user.username;
     if (emailEl) emailEl.textContent = user.email;
+
+    const avatarEl = document.getElementById("display-avatar");
+
+    if (avatarEl && user.avatar) {
+      avatarEl.src = `${S3_BASE_URL}/${user.avatar}`;
+    }
 
     // Show logout button for authenticated users
     if (logoutBtn) logoutBtn.style.display = "block";
@@ -257,18 +274,75 @@ function setupAvatar() {
   const options = document.querySelectorAll(".avatar-option");
 
   options.forEach(option => {
-    option.addEventListener("click", () => {
-      mainAvatar.src = option.src;
+    option.addEventListener("click", async () => {
 
+      const avatarPath = `avatars/${option.dataset.color}.png`;
+
+      try {
+        const headers = getAuthHeaders();
+        if (!headers) return;
+
+        const res = await fetch(`${API_BASE_URL}/users/updateAvatar`, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({
+            avatar: avatarPath
+          })
+        });
+
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error("Failed to update avatar");
+        }
+
+        // Update UI avatar
+        mainAvatar.src =
+          `${S3_BASE_URL}/${avatarPath}`;
+
+        window.bubbistixUI?.showToast({
+          title: "Success!",
+          message: "Your avatar has been updated! ✨",
+          position: "top-right"
+        });
+
+        const modalEl = document.getElementById("avatarModal");
+        bootstrap.Modal.getInstance(modalEl)?.hide();
+
+      } catch (err) {
+        console.error("Avatar update failed:", err);
+      }
+
+    });
+  });
+}
+
+// Handle avatar edit button state
+function setupAvatarEditProtection() {
+  const editBtn = document.getElementById("avatar-edit-btn");
+  const modalEl = document.getElementById("avatarModal");
+
+  if (!editBtn || !modalEl) return;
+
+  editBtn.addEventListener("click", () => {
+    const token = localStorage.getItem("authToken");
+
+    // Guest user
+    if (!token) {
       window.bubbistixUI?.showToast({
-        title: "Success!",
-        message: "Your avatar has been updated! ✨",
+        title: "Account Required",
+        message: "Please create an account or log in to customize your avatar.",
         position: "top-right"
       });
+      return;
+    }
 
-      const modalEl = document.getElementById("avatarModal");
-      bootstrap.Modal.getInstance(modalEl)?.hide();
-    });
+    // If user is logged in, open modal
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
   });
 }
 

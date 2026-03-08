@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/jwt.js";
 import { sendResetEmail } from "../utils/email.js";
+import { AVATAR_OPTIONS } from "../utils/avatarOptions.js";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -271,7 +272,7 @@ const getMe = async (req, res) => {
     const userId = req.user.id;
 
     const user = await User.findById(userId).select(
-      "_id username full_name email role created_at"
+      "_id username full_name email role avatar created_at"
     );
 
     if (!user) {
@@ -293,6 +294,7 @@ const getMe = async (req, res) => {
   }
 };
 
+// Send reset password link for forgotten passwords
 const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -340,10 +342,13 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Update user's password
 const setNewPassword = async (req, res) => {
   try {
+    // Extract reset token and new password from request body
     const { token, newPassword } = req.body;
 
+    // Validate required inputs
     if (!token || !newPassword) {
       return res.status(400).json({
         message: "Invalid request"
@@ -360,6 +365,7 @@ const setNewPassword = async (req, res) => {
       });
     }
 
+    // Hash the reset token for secure database comparison
     const hashedToken = crypto
       .createHash("sha256")
       .update(token)
@@ -376,7 +382,10 @@ const setNewPassword = async (req, res) => {
       });
     }
 
+    // Hash and update the user's new password
     user.password_hash = await bcrypt.hash(newPassword, 10);
+
+    // Clear reset token fields after successful password update
     user.password_reset_token = undefined;
     user.password_reset_expires = undefined;
 
@@ -394,6 +403,43 @@ const setNewPassword = async (req, res) => {
   }
 };
 
+// Update user's profile picture
+const updateAvatar = async (req, res) => {
+  try {
+
+    const userId = req.user.id;
+    const { avatar } = req.body;
+
+    // Validate avatar against allowed options
+    if (!AVATAR_OPTIONS.includes(avatar)) {
+      return res.status(400).json({
+        message: "Invalid avatar selection"
+      });
+    }
+
+    // Update user's avatar and return updated profile fields
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { avatar },
+      { new: true }
+    ).select("username full_name email avatar");
+
+    return res.status(200).json({
+      message: "Avatar updated successfully",
+      user
+    });
+
+  } catch (error) {
+
+    console.error("Update avatar error:", error);
+
+    return res.status(500).json({
+      message: "Server error"
+    });
+
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -401,5 +447,6 @@ export {
   logoutUser,
   getMe,
   resetPassword,
-  setNewPassword
+  setNewPassword,
+  updateAvatar
 };

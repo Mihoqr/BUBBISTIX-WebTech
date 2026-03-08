@@ -6,7 +6,8 @@ import { registerUser,
          logoutUser,
          getMe,
          resetPassword,
-         setNewPassword
+         setNewPassword,
+         updateAvatar
  } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -19,5 +20,6 @@ router.post("/logout", authMiddleware, logoutUser);
 router.get("/getMe", authMiddleware, getMe);
 router.route("/resetPassword").post(resetPassword);
 router.route("/setNewPassword").post(setNewPassword);
+router.patch("/updateAvatar", authMiddleware, updateAvatar);
 
 export default router;

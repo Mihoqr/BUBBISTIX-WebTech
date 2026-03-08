@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import { toTitleCase } from "../utils/textFormatter.js";
+import { AVATAR_OPTIONS } from "../utils/avatarOptions.js";
 
 // User model
 const userSchema = new mongoose.Schema(
@@ -63,6 +64,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["USER", "ADMIN"],
       default: "USER"
+    },
+
+    avatar: {
+      type: String,
+      enum: AVATAR_OPTIONS,
+      default: AVATAR_OPTIONS[0]
     },
 
     password_reset_token: String,
