@@ -1,17 +1,6 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-
-// Helper
-const toTitleCase = (value) => {
-  if (!value) return value;
-
-  return value
-    .toLowerCase()
-    .split(" ")
-    .filter(word => word.length > 0)
-    .map(word => word[0].toUpperCase() + word.slice(1))
-    .join(" ");
-};
+import { toTitleCase } from "../utils/textFormatter.js";
 
 // User model
 const userSchema = new mongoose.Schema(
