@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="success-content">
           <h2 class="success-message">🎉 Message sent!</h2>
           <div class="success-image success-image-centered">
-            <img src="../images/strawberry5.png" alt="Strawberry">
+            <img src="https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/strawberry-5.png" alt="Strawberry">
           </div>
           <p class="success-redirect">
             Thanks for reaching out — your note is on its way to our inbox 💌

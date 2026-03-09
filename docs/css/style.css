@@ -178,7 +178,7 @@ header {
     height: clamp(25rem, 50vh, 35rem);
     padding-bottom: 4rem;
     background: linear-gradient(to bottom, rgba(255, 192, 203, 0.3), transparent),
-              url('../images/Welcome-Image/Home-Welcome Page.png') no-repeat center center;
+              url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/home-welcome-page.png') no-repeat center center;
     background-size: cover;
 }
 
@@ -669,7 +669,7 @@ button:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('../images/background_signup.png');
+    background-image: url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -961,7 +961,7 @@ button:hover {
     padding: 2rem;
     background: 
         linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-        url('../images/background_signup.png');
+        url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1317,7 +1317,7 @@ button:hover {
 .checkout-main {
     background: 
         linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-        url('../images/background_signup.png');
+        url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2112,7 +2112,7 @@ body.sticker-product-page::before {
     z-index: -1;
     background: 
         linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 100%),
-        url('../images/background_signup.png');
+        url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2625,7 +2625,7 @@ body.sticker-product-page::before {
         margin: 0 !important;
         background: 
             linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-            url('../images/background_signup.png');
+            url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
         background-size: cover;
         background-position: center;
         min-height: 100vh;
@@ -3059,7 +3059,7 @@ body.sticker-product-page::before {
         margin: 0 !important;
         background: 
             linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-            url('../images/background_signup.png');
+            url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
         background-size: cover;
         background-position: center;
         min-height: 100vh;
@@ -3221,7 +3221,7 @@ body.sticker-product-page::before {
         padding: 0 !important;
         background: 
             linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-            url('../images/background_signup.png') !important;
+            url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png') !important;
         background-size: cover !important;
         background-position: center !important;
         min-height: 100vh !important;
@@ -3254,7 +3254,7 @@ body.sticker-product-page::before {
     body {
         background: 
             linear-gradient(135deg, rgba(245, 128, 146, 0.7) 0%, rgba(252, 228, 236, 0.7) 100%),
-            url('../images/background_signup.png') !important;
+            url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png') !important;
         background-size: cover !important;
         background-position: center !important;
         background-attachment: fixed !important;
@@ -3594,7 +3594,7 @@ body.sticker-product-page::before {
     z-index: -1;
     background: 
         linear-gradient(rgba(252, 228, 236, 0.7) 100%),
-        url('../images/background_signup.png');
+        url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

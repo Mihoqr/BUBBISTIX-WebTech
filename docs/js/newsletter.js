@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Determine correct image path depending on current page location
   const path = window.location.pathname.replace(/\\/g, '/');
   const imgPath = path.includes('/docs/html/')
-    ? '../images/strawberry4.png'
-    : 'docs/images/strawberry4.png';
+    ? 'https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/strawberry-4.png'
+    : 'https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/strawberry-4.png';
 
   // Fallback: Inject legacy popup markup once when Bootstrap toast is not available
   if (!document.getElementById('subscribePopup')) {
