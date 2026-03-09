@@ -1745,18 +1745,17 @@ button:hover {
 
 .shop-wrapper {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    background: #f8f8f8; 
+    min-height: 100vh;
 }
 
 .sidebar {
     width: 250px;
     position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
+    top: 0; 
+    height: fit-content; 
     padding: 20px;
-    background: #f8f8f8;
+    background: #f8f8f8; 
     border-right: 1px solid #ddd;
     display: flex;
     flex-direction: column;
@@ -1803,8 +1802,8 @@ button:hover {
 .shop-content {
     flex: 1;
     padding: 20px;
-    margin-top: 15px;
-    min-width: 280px;
+    background: white; 
+    margin-top: 0;
 }
 
 .shop-toolbar {
