@@ -608,7 +608,7 @@ button:hover {
 
 .faq-answer p {
     margin-bottom: 1rem;
-    padding-top: 1rem; /* Dito natin ilalagay ang spacing para hindi tumalon ang transition */
+    padding-top: 1rem;
 }
 
 .faq-answer p:last-child {
@@ -616,7 +616,7 @@ button:hover {
 }
 
 .faq-item.active .faq-answer {
-    max-height: 300px; /* Mas mababa para mas sumabay ang bilis ng transition sa content */
+    max-height: 300px;
     opacity: 1;
 }
 
@@ -628,29 +628,64 @@ button:hover {
 .or-divider {
     display: flex;
     align-items: center;
-    justify-content: center;
+    text-align: center;
+    margin: 1.2rem 0;
     width: 100%;
-    max-width: 400px;
-    margin: 0.2rem auto 0.2rem auto;
-    color: #b0b0b0;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    color: #888;
 }
-.or-divider span {
-    padding: 0 1rem;
-    color: #b0b0b0;
-    background: #fff;
-    z-index: 1;
-}
-.or-divider:before,
-.or-divider:after {
-    content: '';
+
+.or-divider::before,
+.or-divider::after {
+    content: "";
     flex: 1;
-    border-bottom: 1.5px solid #e0e0e0;
-    margin: 0 0.5rem;
-    z-index: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.or-divider span {
+    padding: 0 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    text-transform: lowercase;
+}
+
+.auth-footer-text {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-footer-text p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+}
+
+.auth-footer-text a {
+    color: #4a6741;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.auth-footer-text a:hover {
+    color: #FFB6C1 !important;
+    text-decoration: none !important;
+    opacity: 1;
+}
+
+.invalid-feedback, 
+.validation-message,
+.input-group + .error-text,
+#password-requirements,
+[id$="-error"] { 
+    text-align: left !important;
+    display: block;
+    width: 100%;
+    font-size: 0.85rem; 
+    padding-left: 5px;
+    margin-top: 6px; 
+    color: #dc3545;
+    line-height: 1.4; 
 }
 
 .registration-main {
@@ -664,17 +699,18 @@ button:hover {
 
 .registration-main::before {
     content: '';
-    position: absolute;
+    position: fixed; /* Binago mula absolute papuntang fixed */
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('https://bubbistix-storage.s3.ap-southeast-1.amazonaws.com/assets/background-signup.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.7;
     z-index: -1;
+    pointer-events: none; /* Para hindi niya ma-block ang clicks sa form */
 }
 
 .login-container {
@@ -698,10 +734,9 @@ button:hover {
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem; /* Reduced gap for tighter layout */
+    gap: 0.6rem; 
 }
 
-/* --- ITO ANG PINAKA-IMPORTANTENG PART PARA SA MATA --- */
 .input-group {
     position: relative;
     display: flex;
@@ -711,7 +746,7 @@ button:hover {
 .input-group input {
     width: 100%;
     padding: 1rem;
-    padding-right: 45px; /* Para may space ang text at hindi mabangga ang mata */
+    padding-right: 45px; 
     border: 2px solid #49705B;
     border-radius: 8px;
     font-size: 1rem;
@@ -725,7 +760,7 @@ button:hover {
     position: absolute;
     right: 15px;
     top: 50%;
-    transform: translateY(-50%); /* Nilalagay nito ang mata sa gitna (vertical center) */
+    transform: translateY(-50%); 
     cursor: pointer;
     color: #49705B;
     font-size: 1.1rem;
@@ -734,7 +769,7 @@ button:hover {
 }
 
 .input-group i:hover {
-    color: #E6536D; /* Magpapalit ng kulay pag tinapatan ang mata */
+    color: #E6536D; 
 }
 
 .input-group input:focus {
@@ -778,7 +813,7 @@ button:hover {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    align-self: center; /* Igitna ang button sa flex container */
+    align-self: center; 
 }
 
 .login-btn:hover {
