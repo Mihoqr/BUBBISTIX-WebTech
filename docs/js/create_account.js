@@ -4,7 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
 
   const passwordInput = form.querySelector('#password');
+  const confirmPasswordInput = form.querySelector('#confirmPassword');
   const togglePassword = form.querySelector('#togglePassword');
+  const toggleConfirmPassword = form.querySelector('#toggleConfirmPassword');
+
+  confirmPasswordInput?.addEventListener('input', () => {
+  window.bubbistixValidate?.clearFieldError(confirmPasswordInput);
+});
 
   // --- PASSWORD TOGGLE LOGIC ---
   if (togglePassword && passwordInput) {
@@ -18,6 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
       this.classList.toggle('fa-eye-slash');
     });
   }
+
+  if (toggleConfirmPassword && confirmPasswordInput) {
+  toggleConfirmPassword.addEventListener('click', function () {
+    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    confirmPasswordInput.setAttribute('type', type);
+
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+}
 
   // Handle create account form submission
   form.addEventListener('submit', async (e) => {
@@ -65,8 +81,27 @@ document.addEventListener('DOMContentLoaded', () => {
       valid = false;
       V.setFieldError ? V.setFieldError(passwordInput, 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.') : passwordInput.setAttribute('aria-invalid', 'true');
     } else { V.clearFieldError?.(passwordInput); }
+    
+    // Confirm Password
+    if (!confirmPasswordInput || confirmPasswordInput.value.trim() === '') {
+      valid = false;
+      V.setFieldError
+        ? V.setFieldError(confirmPasswordInput, 'Please confirm your password.')
+        : confirmPasswordInput.setAttribute('aria-invalid', 'true');
 
+    } else if (confirmPasswordInput.value !== passwordInput.value) {
+      valid = false;
+      V.setFieldError
+        ? V.setFieldError(confirmPasswordInput, 'Passwords do not match.')
+        : confirmPasswordInput.setAttribute('aria-invalid', 'true');
+
+    } else {
+      V.clearFieldError?.(confirmPasswordInput);
+    }
+    
     if (!valid) return;
+    
+    
 
     // Loading State
     form.setAttribute('aria-busy', 'true');
