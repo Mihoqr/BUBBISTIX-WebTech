@@ -635,7 +635,6 @@ button:hover {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 1.2rem 0;
     width: 100%;
     color: #888;
 }
@@ -754,7 +753,7 @@ button:hover {
     padding: 1rem;
     padding-right: 45px; 
     border: 2px solid #49705B;
-    border-radius: 8px;
+    border-radius: 8px !important;
     font-size: 1rem;
     background: white;
     color: #333;
@@ -765,13 +764,13 @@ button:hover {
 .input-group i {
     position: absolute;
     right: 15px;
-    top: 50%;
-    transform: translateY(-50%); 
+    top: 24px;
     cursor: pointer;
     color: #49705B;
     font-size: 1.1rem;
     z-index: 10;
     transition: color 0.3s ease;
+    height: 52px;
 }
 
 .input-group i:hover {
@@ -787,6 +786,11 @@ button:hover {
 }
 
 /* --- LINKS AND BUTTONS --- */
+.forgot-password-wrapper {
+    text-align: right; 
+    margin-top: -0.5rem; 
+}
+
 .forgot-password {
     text-align: left;
     margin-top: -0.5rem;
@@ -797,6 +801,7 @@ button:hover {
     font-size: .85rem;
     text-decoration: underline;
 }
+
 
 .forgot-link:hover, .create-link:hover {
     color: #49705b;
@@ -814,6 +819,7 @@ button:hover {
     cursor: pointer;
     transition: all 0.3s ease !important;
     margin-top: 1rem;
+    margin-bottom: 8px;
     width: 100%;
     max-width: 400px;
     margin-left: auto;
@@ -866,6 +872,10 @@ button:hover {
     height: 22px;
     width: 22px;
     margin-right: 0.5rem;
+}
+
+.g_id_signin {
+    justify-content: center;
 }
 
 .create-account {
