@@ -606,17 +606,20 @@ button:hover {
 
 .faq-answer h4 {
     color: var(--leafy-green);
-    margin-bottom: 0.5rem;
+    margin: 0.8rem 0 0.25rem 0;
     font-weight: 600;
 }
 
 .faq-answer p {
-    margin-bottom: 1rem;
-    padding-top: 1rem;
+     margin: 0.3rem 0 1rem 0;
 }
 
 .faq-answer p:last-child {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.faq-answer h4:first-child {
+    margin-top: 0;
 }
 
 .faq-item.active .faq-answer {
@@ -1251,7 +1254,7 @@ button:hover {
   line-height: 1.5;
 }
 
-/* Readability: larger title and body for CENTERED toasts only (Sign In, Create Account, Contact, Newsletter) */
+/* Readability: larger title and body for CENTERED toasts only (Sign In, Create Account, Contact) */
 #toastContainerCenter .toast.brand-toast .toast-header .toast-title,
 #toastContainerCenter .toast.brand-toast .toast-header strong.toast-title {
   font-size: 1.25rem; /* slightly larger than body */
@@ -1447,27 +1450,6 @@ button:hover {
     cursor: not-allowed;
 }
 
-.location-dropdowns {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.name-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.postal-city-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
 .half-width {
     width: 100%;
 }
@@ -1514,24 +1496,6 @@ button:hover {
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     margin: 15px 0;
-}
-
-.billing-address {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.billing-address input[type="checkbox"] {
-    accent-color: #f58092;
-}
-
-.billing-address label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    color: #666;
-    cursor: pointer;
 }
 
 .payment-option input[type="radio"] {
@@ -1633,7 +1597,6 @@ button:hover {
     padding-top: 10px;
     margin-top: 10px;
 }
-
 
 
 /* Shop Gallery */
@@ -3791,12 +3754,11 @@ body.sticker-product-page::before {
 
 .sticker-icon-bg {
     background: var(--powder-pink);
-    padding: 10px;
-    border-radius: 15px;
+    border-radius: 10px;
     margin-right: 15px;
 }
 
-.sticker-icon-bg img { width: 60px; height: 60px; object-fit: contain; }
+.sticker-icon-bg img { width: 60px; height: 60px; border-radius: 10px; object-fit: contain; }
 
 .sticker-actions-right {
     display: flex;
