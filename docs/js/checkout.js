@@ -1,16 +1,12 @@
 import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
-
-// API base path for checkout-related backend endpoints
-const API_BASE_URL = "http://localhost:4000/api/v1";
-
-// Backend host for serving sticker images
-const BACKEND_HOST = "http://localhost:4000";
+import { API_BASE_URL } from "./config.js";
 
 // Initialize checkout data, payment options, and form validation on load
 document.addEventListener("DOMContentLoaded", () => {
   loadCartItems();
   initializePaymentMethods();
   initializeFormValidation();
+  initializeLiveFormatting();
 });
 
 // Fetch cart items from backend and render checkout summary
@@ -90,11 +86,8 @@ function initializeFormValidation() {
   payNowBtn.addEventListener("click", e => {
     e.preventDefault();
 
-    // Stop checkout if form validation fails
-    if (!validateForm()) {
-      showMessage("Please correct the highlighted fields before proceeding.", "error");
-      return;
-    }
+    // Stop checkout if form validation fails — errors shown inline per field
+    if (!validateForm()) return;
 
     const modalEl = document.getElementById("confirmPaymentModal");
     if (modalEl) {
@@ -190,16 +183,151 @@ function initializePaymentMethods() {
   creditCardFields.style.display = "block";
 }
 
-// Validate required checkout form fields
-function validateForm() {
-  const email = document.getElementById("email");
-  let valid = true;
+//  Inline error helpers
+// Attach a red error message inside the field wrapper so it stacks below the input
+function setFieldError(input, message) {
+  clearFieldError(input);
 
-  if (!email.value.trim()) {
-    email.style.borderColor = "#dc3545";
-    valid = false;
+  input.style.borderColor = "#dc3545";
+  input.setAttribute("aria-invalid", "true");
+
+  const error = document.createElement("div");
+  error.className = "checkout-field-error";
+  error.setAttribute("role", "alert");
+  error.textContent = message;
+  error.style.cssText = "color:#dc3545;font-size:0.8rem;margin-top:4px;";
+
+  // Append INSIDE the wrapper so it becomes a child (stacks below in flex-column),
+  // or insert after the input directly when there is no wrapper
+  const wrapper = input.closest(".card-field-wrapper");
+  if (wrapper) {
+    wrapper.appendChild(error);
   } else {
-    email.style.borderColor = "#ddd";
+    input.insertAdjacentElement("afterend", error);
+  }
+}
+
+// Remove the error state from a field
+function clearFieldError(input) {
+  input.style.borderColor = "";
+  input.removeAttribute("aria-invalid");
+
+  const wrapper = input.closest(".card-field-wrapper");
+  if (wrapper) {
+    const existing = wrapper.querySelector(".checkout-field-error");
+    if (existing) existing.remove();
+  } else {
+    const next = input.nextElementSibling;
+    if (next && next.classList.contains("checkout-field-error")) next.remove();
+  }
+}
+
+// Auto-format card fields as the user types
+function initializeLiveFormatting() {
+  const cardNumber = document.getElementById("cardNumber");
+  const expiryDate = document.getElementById("expiryDate");
+  const cvv        = document.getElementById("cvv");
+  const cardName   = document.getElementById("cardName");
+  const emailInput = document.getElementById("email");
+
+  // Groups of 4 digits: 1234 5678 9012 3456
+  if (cardNumber) {
+    cardNumber.addEventListener("input", () => {
+      let val = cardNumber.value.replace(/\D/g, "").slice(0, 16);
+      cardNumber.value = val.replace(/(.{4})/g, "$1 ").trim();
+      clearFieldError(cardNumber);
+    });
+  }
+
+  // Auto-insert slash after MM: 12/26
+  if (expiryDate) {
+    expiryDate.addEventListener("input", () => {
+      let val = expiryDate.value.replace(/\D/g, "").slice(0, 4);
+      if (val.length >= 3) val = val.slice(0, 2) + "/" + val.slice(2);
+      expiryDate.value = val;
+      clearFieldError(expiryDate);
+    });
+  }
+
+  // Digits only, max 4
+  if (cvv) {
+    cvv.addEventListener("input", () => {
+      cvv.value = cvv.value.replace(/\D/g, "").slice(0, 4);
+      clearFieldError(cvv);
+    });
+  }
+
+  if (cardName)   cardName.addEventListener("input",   () => clearFieldError(cardName));
+  if (emailInput) emailInput.addEventListener("input", () => clearFieldError(emailInput));
+}
+
+// Validate all checkout form fields and show specific inline errors
+function validateForm() {
+  // Wipe all previous errors for a clean re-validation pass
+  document.querySelectorAll(".checkout-field-error").forEach(el => el.remove());
+  document.querySelectorAll(".checkout-input").forEach(el => {
+    el.style.borderColor = "";
+    el.removeAttribute("aria-invalid");
+  });
+
+  let valid = true;
+  let firstError = null;
+  const track = (input) => { if (!firstError) firstError = input; };
+
+  // Email
+  const email = document.getElementById("email");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.value.trim()) {
+    setFieldError(email, "Email is required."); valid = false; track(email);
+  } else if (!emailRegex.test(email.value.trim())) {
+    setFieldError(email, "Please enter a valid email address."); valid = false; track(email);
+  }
+
+  // Card number
+  const cardNumber = document.getElementById("cardNumber");
+  const rawCard = cardNumber.value.replace(/\s/g, "");
+  if (!rawCard) {
+    setFieldError(cardNumber, "Card number is required."); valid = false; track(cardNumber);
+  } else if (!/^\d{16}$/.test(rawCard)) {
+    setFieldError(cardNumber, "Card number must be 16 digits."); valid = false; track(cardNumber);
+  }
+
+  // Expiry date
+  const expiryDate = document.getElementById("expiryDate");
+  const expiryVal  = expiryDate.value.trim();
+  if (!expiryVal) {
+    setFieldError(expiryDate, "Expiration date is required."); valid = false; track(expiryDate);
+  } else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryVal)) {
+    setFieldError(expiryDate, "Use MM/YY format (e.g. 08/27)."); valid = false; track(expiryDate);
+  } else {
+    const [month, year] = expiryVal.split("/").map(Number);
+    const expiry    = new Date(2000 + year, month - 1, 1);
+    const thisMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    if (expiry < thisMonth) {
+      setFieldError(expiryDate, "This card has expired."); valid = false; track(expiryDate);
+    }
+  }
+
+  // CVV
+  const cvv = document.getElementById("cvv");
+  if (!cvv.value.trim()) {
+    setFieldError(cvv, "CVV is required."); valid = false; track(cvv);
+  } else if (!/^\d{3,4}$/.test(cvv.value.trim())) {
+    setFieldError(cvv, "CVV must be 3 or 4 digits."); valid = false; track(cvv);
+  }
+
+  // Name on card
+  const cardName = document.getElementById("cardName");
+  if (!cardName.value.trim()) {
+    setFieldError(cardName, "Name on card is required."); valid = false; track(cardName);
+  } else if (cardName.value.trim().length < 2) {
+    setFieldError(cardName, "Please enter the full name on your card."); valid = false; track(cardName);
+  }
+
+  // Scroll to and focus the first invalid field
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+    firstError.focus();
   }
 
   return valid;

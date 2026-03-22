@@ -1498,6 +1498,12 @@ button:hover {
     margin: 15px 0;
 }
 
+/* Each half-width field gets its own column so errors stack below the input */
+.card-field-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .payment-option input[type="radio"] {
     margin-right: 10px;
     accent-color: #f58092;
