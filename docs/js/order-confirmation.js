@@ -1,10 +1,5 @@
 import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
-
-// Base API URL for order-related backend requests
-const API_BASE_URL = "http://localhost:4000/api/v1";
-
-// Backend host used for resolving image URLs
-const BACKEND_HOST = "http://localhost:4000";
+import { API_BASE_URL } from "./config.js";
 
 // Load the latest order details once the page is ready
 document.addEventListener("DOMContentLoaded", () => {

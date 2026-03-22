@@ -1,37 +1,8 @@
-// Build auth headers using stored JWT and redirect if missing
-function getAuthHeaders() {
-  const token = localStorage.getItem("authToken");
-
-  // Redirect to login if user is not authenticated
-  if (!token) {
-    return null;
-  }
-
-  // Attach Bearer token for protected API requests
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`
-  };
-}
-
-// Clear auth state and redirect on unauthorized access
-function handleUnauthorized() {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("userLoggedIn");
-  localStorage.removeItem("userId");
-
-  // Force re-login
-  window.location.href = "registration.html";
-}
-
-// API base path for authenticated backend requests
-const API_BASE_URL = "http://localhost:4000/api/v1";
+import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
+import { API_BASE_URL } from "./config.js";
 
 // Base URL for accessing AWS bucket
 const S3_BASE_URL = "https://bubbistix-storage.s3.amazonaws.com";
-
-// Backend host for serving images and downloads
-const BACKEND_HOST = "http://localhost:4000";
 
 document.addEventListener("DOMContentLoaded", () => {
   // Check auth token before running protected account logic

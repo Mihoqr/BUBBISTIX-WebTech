@@ -1,6 +1,6 @@
+import { API_BASE_URL as API_BASE } from "./config.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Base API endpoint for auth requests
-  const API_BASE = "http://localhost:4000/api/v1";
 
   // Login form and optional reset success message
   const loginForm = document.getElementById("loginForm");
@@ -150,7 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Google callback function
 window.handleGoogleCredential = async function (response) {
-  const API_BASE = "http://localhost:4000/api/v1";
 
   // Uncomment to get Google ID token from the console for Postman testing
   //console.log("GOOGLE ID TOKEN:", response.credential);

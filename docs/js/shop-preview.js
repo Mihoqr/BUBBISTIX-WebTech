@@ -1,10 +1,5 @@
 import { getAuthHeaders, handleUnauthorized } from "./utils/auth.js";
-
-// API base path for sticker, cart, and checkout backend endpoints
-const API_BASE_URL = "http://localhost:4000/api/v1";
-
-// Backend host for serving sticker preview images
-const BACKEND_HOST = "http://localhost:4000";
+import { API_BASE_URL } from "./config.js";
 
 // Initialize preview page logic on page load
 document.addEventListener("DOMContentLoaded", () => {

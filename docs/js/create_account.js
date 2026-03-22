@@ -1,3 +1,5 @@
+import { API_BASE_URL as API_BASE } from "./config.js";
+
 // Handle create account form submission
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createAccountForm');
@@ -41,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if toast UI helper is available
     const canToast = !!(window.bubbistixUI && typeof window.bubbistixUI.showToast === 'function');
-    const API_BASE = 'http://localhost:4000/api/v1';
-
     // Cache input references
     const usernameInput = form.querySelector('#username');
     const fullnameInput = form.querySelector('#fullname');
@@ -151,8 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.handleGoogleCredential = async function (response) {
-  const API_BASE = "http://localhost:4000/api/v1";
-
   try {
     const res = await fetch(`${API_BASE}/users/googleAuth`, {
       method: "POST",

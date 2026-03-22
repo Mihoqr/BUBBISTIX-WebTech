@@ -1,5 +1,4 @@
-// API base path for contact form backend endpoint
-const API_BASE_URL = "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "./config.js";
 
 // Initialize contact form submission logic on page load
 document.addEventListener("DOMContentLoaded", () => {

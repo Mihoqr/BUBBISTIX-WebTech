@@ -1,7 +1,7 @@
 // Handle password reset request on page load
+import { API_BASE_URL as API_BASE } from "./config.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Base API endpoint for auth-related requests
-  const API_BASE = "http://localhost:4000/api/v1";
   const form = document.getElementById("resetPasswordForm");
 
   // Check if toast UI helper is available

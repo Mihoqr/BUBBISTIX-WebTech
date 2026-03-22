@@ -1,5 +1,6 @@
+import { API_BASE_URL as API_BASE } from "./config.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "http://localhost:4000/api/v1";
   const form = document.getElementById("setNewPasswordForm");
   const canToast =
     !!window.bubbistixUI && typeof window.bubbistixUI.showToast === "function";

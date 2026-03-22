@@ -1,8 +1,4 @@
-// API base path for backend endpoints
-const API_BASE_URL = "http://localhost:4000/api/v1";
-
-// Backend host for serving images
-const BACKEND_HOST = "http://localhost:4000";
+import { API_BASE_URL } from "./config.js";
 
 // Load homepage collections on page load
 document.addEventListener("DOMContentLoaded", () => {
