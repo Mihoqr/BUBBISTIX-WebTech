@@ -4,6 +4,19 @@ A full-stack e-commerce web application for browsing, purchasing, and downloadin
 
 ---
 
+## 📋 Table of Contents
+
+- 📸 [Pages](#-pages)
+- ✨ [Features](#-features)
+- 🛠️ [Tech Stack](#️-tech-stack)
+- 📁 [Project Structure](#-project-structure)
+- ⚙️ [Setup & Installation](#️-setup--installation)
+- 🧪 [Testing](#-testing)
+- 🔌 [API Reference](#-api-reference)
+- 📜 [License](#-license)
+
+---
+
 ## 📸 Pages
 
 | Page | Description |
@@ -80,6 +93,7 @@ A full-stack e-commerce web application for browsing, purchasing, and downloadin
 - Reset tokens stored as SHA-256 hashes, never in plain text
 - Email enumeration prevention on the reset password endpoint
 - CORS configured for frontend origin
+> **Note:** Bubbistix does not have a dedicated admin dashboard or UI. Admin tasks such as creating and deleting stickers, managing categories, and viewing contact messages are performed directly via the REST API using a tool like Postman. All admin endpoints require an `ADMIN`-role JWT in the Authorization header. See the [API Reference](#-api-reference) section for the full list of admin routes.
 
 ### 💌 Contact
 - Public contact form — no login required
