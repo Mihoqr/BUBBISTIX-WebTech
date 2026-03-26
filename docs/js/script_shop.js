@@ -57,11 +57,16 @@ function renderGallery(filterText = "", sortBy = "") {
   let filtered = [...stickers];
 
   // Apply search filter
-  if (filterText) {
-    filtered = filtered.filter(sticker =>
-      sticker.name.toLowerCase().includes(filterText.toLowerCase())
+  const search = filterText.toLowerCase();
+  filtered = filtered.filter(sticker => {
+    const name = sticker.name.toLowerCase();
+    const categoryName = sticker.category_id?.name?.toLowerCase() || "";
+
+    return (
+      name.includes(search) ||
+      categoryName.includes(search)
     );
-  }
+  });
 
   // Apply sorting option
   switch (sortBy) {
