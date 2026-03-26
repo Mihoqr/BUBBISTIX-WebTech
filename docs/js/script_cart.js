@@ -55,6 +55,7 @@ async function renderCart() {
       `;
 
       totalEl.textContent = '₱ 0.00 PHP';
+      document.getElementById('cart-count').textContent = '0';
 
       if (checkoutBtn) {
         checkoutBtn.disabled = true;
@@ -119,6 +120,7 @@ async function renderCart() {
     // Update cart UI and total amount
     cartItemsContainer.innerHTML = cartHTML;
     totalEl.textContent = `₱ ${total.toFixed(2)} PHP`;
+    document.getElementById('cart-count').textContent = cart.items.length;
 
     // Enable checkout when cart has items
     if (checkoutBtn) {
