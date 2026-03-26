@@ -351,7 +351,7 @@ All routes are prefixed with `/api/v1`.
 ---
 
 ## 📜 License
-© 2025 Bubbistix. For educational use only — not for commercial resale.
+© 2025–2026 Bubbistix. For educational use only — not for commercial resale.
 
 ---
 
