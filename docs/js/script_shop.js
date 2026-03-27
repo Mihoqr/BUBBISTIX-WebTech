@@ -105,7 +105,13 @@ function renderGallery(filterText = "", sortBy = "") {
   });
 
   // Render each category section
-  Object.values(grouped).forEach(({ name, slug, items }) => {
+  Object.values(grouped).sort((a, b) => {
+    const aLimited = a.slug === 'limited-edition';
+    const bLimited = b.slug === 'limited-edition';
+    if (aLimited) return 1;
+    if (bLimited) return -1;
+    return a.name.localeCompare(b.name);
+  }).forEach(({ name, slug, items }) => {
     const navItem = document.createElement("li");
     navItem.innerHTML = `<a href="#${slug}">${name}</a>`;
     categoryNav.appendChild(navItem);
