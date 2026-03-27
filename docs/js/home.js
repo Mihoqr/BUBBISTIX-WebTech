@@ -23,7 +23,13 @@ async function loadCollections() {
     // Clear grid and render one preview card per category
     grid.innerHTML = "";
 
-    for (const category of catData.categories) {
+    const sortedCategories = [...catData.categories].sort((a, b) => {
+      if (a.slug === 'limited-edition') return 1;
+      if (b.slug === 'limited-edition') return -1;
+      return a.name.localeCompare(b.name);
+    });
+
+    for (const category of sortedCategories) {
       const previewSticker = stickers.find(
         s => s.category_id?._id === category._id
       );
