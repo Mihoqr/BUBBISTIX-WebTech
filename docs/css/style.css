@@ -3702,8 +3702,9 @@ body.sticker-product-page::before {
 
 .avatar-pencil-btn:hover { transform: scale(1.1); color: var(--leafy-green); }
 
-.user-name-text { font-family: 'Cute-Sunrise' !important; font-size: 2.5rem !important; margin-bottom: 0; }
-.user-email-text { font-family: 'Poppins'; font-size: 0.9rem; color: #888; }
+.user-name-text { font-family: 'Cute-Sunrise' !important; font-size: clamp(1.5rem, 4vw, 2.5rem) !important; margin-bottom: 0; word-break: break-word; }
+
+.user-email-text { font-family: 'Poppins'; font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: #888; word-break: break-word; }
 
 .purchase-title { 
     font-family: 'Sugar-Flare' !important; 
