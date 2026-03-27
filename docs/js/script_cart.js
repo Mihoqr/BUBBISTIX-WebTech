@@ -132,7 +132,9 @@ async function renderCart() {
       checkoutBtn.style.color = '';
       checkoutBtn.style.border = '';
       checkoutBtn.style.boxShadow = '';
-      checkoutBtn.onclick = () => {
+      checkoutBtn.onclick = async () => {
+        const blocked = await hasLimitedSoldItem(cart.items);
+        if (blocked) return;
         window.location.href = './checkout.html';
       };
     }
@@ -204,6 +206,51 @@ async function removeItem(stickerId) {
   } catch (error) {
     console.error("Remove item error:", error);
     alert("Something went wrong.");
+  }
+}
+
+// Check if any limited sticker in cart is already sold before allowing checkout
+async function hasLimitedSoldItem(items) {
+  const headers = getAuthHeaders();
+  if (!headers) return false;
+
+  for (const item of items) {
+    const sticker = item.sticker_id;
+
+    const res = await fetch(`${API_BASE_URL}/carts/addToCart`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ sticker_id: sticker._id })
+    });
+
+    const data = await res.json();
+
+    if (data.code === "LIMITED_SOLD") {
+      showToast(
+        "Sold Out",
+        `"${sticker.name}" is a limited edition sticker that is already sold. Please remove it from your cart before checking out.`,
+        "info"
+      );
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Display toast notification with fallback alert
+function showToast(title, message, type = "success") {
+  if (window.bubbistixUI && typeof window.bubbistixUI.showToast === "function") {
+    window.bubbistixUI.showToast({
+      title,
+      message,
+      type,
+      autohide: true,
+      delay: 5000,
+      position: "top-right"
+    });
+  } else {
+    alert(message);
   }
 }
 

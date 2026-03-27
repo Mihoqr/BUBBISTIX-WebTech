@@ -49,6 +49,7 @@ const addToCart = async (req, res) => {
 
       if (alreadyOwned) {
         return res.status(400).json({
+          code: "LIMITED_SOLD",
           message: `Limited sticker '${sticker.name}' is already sold.`
         });
       }
