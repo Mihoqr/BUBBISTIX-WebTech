@@ -257,7 +257,12 @@ function initializeLiveFormatting() {
     });
   }
 
-  if (cardName)   cardName.addEventListener("input",   () => clearFieldError(cardName));
+  if (cardName) {
+    cardName.addEventListener("input", () => {
+      cardName.value = cardName.value.replace(/[0-9]/g, "");
+      clearFieldError(cardName);
+    });
+  }
   if (emailInput) emailInput.addEventListener("input", () => clearFieldError(emailInput));
 }
 
@@ -322,6 +327,8 @@ function validateForm() {
     setFieldError(cardName, "Name on card is required."); valid = false; track(cardName);
   } else if (cardName.value.trim().length < 2) {
     setFieldError(cardName, "Please enter the full name on your card."); valid = false; track(cardName);
+  } else if (/\d/.test(cardName.value.trim())) {
+    setFieldError(cardName, "Name on card must not contain numbers."); valid = false; track(cardName);
   }
 
   // Scroll to and focus the first invalid field
